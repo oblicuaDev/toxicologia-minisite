@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Directorio — Micrositio Toxicología INS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Design tokens ─────────────────────────────────────────── */
+    :root {
+      --background:           hsl(0 0% 100%);
+      --foreground:           hsl(220 15% 15%);
+      --card:                 hsl(220 14% 98%);
+      --card-foreground:      hsl(220 15% 15%);
+      --primary:              hsl(217 93% 45%);
+      --primary-foreground:   hsl(0 0% 100%);
+      --secondary:            hsl(220 14% 96%);
+      --secondary-foreground: hsl(220 15% 25%);
+      --muted:                hsl(220 14% 96%);
+      --muted-foreground:     hsl(220 9% 46%);
+      --accent:               hsl(217 90% 96%);
+      --accent-foreground:    hsl(217 93% 40%);
+      --success:              hsl(142 71% 45%);
+      --warning:              hsl(38 92% 50%);
+      --border:               hsl(220 13% 88%);
+      --input:                hsl(220 13% 91%);
+      --ring:                 hsl(217 93% 45%);
+      --radius:               0.625rem;
+      --shadow-card:          0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+      --shadow-card-hover:    0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+      --shadow-elevated:      0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', sans-serif; background: var(--background); color: var(--foreground); font-size: 1rem; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+
+    .container { width: 100%; max-width: 1400px; margin-inline: auto; padding-inline: 2rem; }
+
+    /* ── Flag divider ──────────────────────────────────────────── */
+    .flag-divider { width: 100%; height: 4px; display: flex; }
+    .flag-divider .seg-yellow { flex: 2; background: #FCD116; }
+    .flag-divider .seg-blue   { flex: 1; background: #003893; }
+    .flag-divider .seg-red    { flex: 1; background: #CE1126; }
+
+    /* ── Header ────────────────────────────────────────────────── */
+    .site-header {
+      position: sticky; top: 0; z-index: 50; height: 4rem;
+      background: hsl(0 0% 100% / 0.95);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-inner { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
+    .logo-wrap { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+    .logo-wrap img { height: 2.5rem; width: auto; }
+    .logo-sep { width: 1px; height: 1.5rem; background: var(--border); }
+    .logo-label { font-size: 0.8rem; font-weight: 600; color: var(--primary); line-height: 1.2; max-width: 160px; }
+    nav { display: flex; align-items: center; gap: 0.5rem; }
+    .nav-link {
+      display: inline-flex; align-items: center; gap: 0.375rem;
+      padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500;
+      border-radius: 9999px; border: 1px solid var(--border);
+      background: transparent; color: var(--foreground); transition: all 200ms ease; white-space: nowrap;
+    }
+    .nav-link:hover, .nav-link.active { background: var(--primary); color: var(--primary-foreground); border-color: var(--primary); }
+    .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 0.5rem; border: none; background: none; }
+    .menu-toggle span { display: block; width: 22px; height: 2px; background: var(--foreground); border-radius: 2px; transition: all 200ms ease; }
+
+    /* ── Page header ───────────────────────────────────────────── */
+    .page-hero {
+      background: var(--secondary);
+      border-bottom: 1px solid var(--border);
+      padding-block: 2.5rem;
+    }
+    .page-hero-inner { display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+    .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: var(--muted-foreground); margin-bottom: 0.75rem; }
+    .breadcrumb a { color: var(--primary); }
+    .breadcrumb svg { width: 12px; height: 12px; }
+    .page-label { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary); margin-bottom: 0.5rem; }
+    .page-title { font-size: 1.875rem; font-weight: 600; letter-spacing: -0.02em; color: var(--foreground); margin-bottom: 0.375rem; }
+    .page-desc { font-size: 0.95rem; line-height: 1.6; color: var(--muted-foreground); max-width: 560px; }
+    .page-hero-stats { display: flex; align-items: center; gap: 2rem; flex-shrink: 0; }
+    .hero-stat { text-align: center; }
+    .hero-stat-value { font-size: 1.75rem; font-weight: 700; color: var(--primary); line-height: 1; }
+    .hero-stat-label { font-size: 0.72rem; color: var(--muted-foreground); margin-top: 0.25rem; }
+    .hero-stat-sep { width: 1px; height: 2.5rem; background: var(--border); }
+
+    /* ── Btn ───────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.5rem 1.25rem; font-family: 'Poppins', sans-serif;
+      font-size: 0.875rem; font-weight: 500; border-radius: 9999px;
+      border: 1px solid transparent; cursor: pointer; transition: all 200ms ease;
+    }
+    .btn-primary { background: var(--primary); color: var(--primary-foreground); border-color: var(--primary); }
+    .btn-primary:hover { background: hsl(217 93% 40%); }
+    .btn-secondary { background: transparent; color: var(--foreground); border-color: var(--border); }
+    .btn-secondary:hover { background: var(--primary); color: var(--primary-foreground); border-color: var(--primary); }
+
+    /* ── Filter bar ────────────────────────────────────────────── */
+    .filter-bar {
+      background: var(--background);
+      border-bottom: 1px solid var(--border);
+      padding-block: 1.25rem;
+      position: sticky;
+      top: 4rem;
+      z-index: 40;
+    }
+    .filter-inner { display: flex; align-items: center; gap: 0.875rem; flex-wrap: wrap; }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 220px;
+      max-width: 340px;
+    }
+    .search-icon {
+      position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);
+      color: var(--muted-foreground); pointer-events: none;
+    }
+    .search-input {
+      width: 100%; height: 2.5rem; padding: 0 0.75rem 0 2.25rem;
+      font-family: 'Poppins', sans-serif; font-size: 0.875rem;
+      border: 1px solid var(--input); border-radius: 9999px;
+      background: var(--background); color: var(--foreground);
+      transition: all 200ms ease; outline: none;
+    }
+    .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px hsl(217 93% 45% / 0.15); }
+    .search-input::placeholder { color: var(--muted-foreground); }
+
+    .filter-select {
+      height: 2.5rem; padding: 0 2rem 0 0.875rem;
+      font-family: 'Poppins', sans-serif; font-size: 0.875rem; font-weight: 500;
+      border: 1px solid var(--border); border-radius: 9999px;
+      background: var(--background); color: var(--foreground);
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      cursor: pointer; transition: all 200ms ease; outline: none;
+    }
+    .filter-select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px hsl(217 93% 45% / 0.15); }
+
+    .filter-chip {
+      display: inline-flex; align-items: center; gap: 0.375rem;
+      padding: 0.375rem 0.875rem; font-size: 0.8rem; font-weight: 500;
+      border-radius: 9999px; border: 1px solid var(--border);
+      background: transparent; color: var(--muted-foreground);
+      cursor: pointer; transition: all 200ms ease; white-space: nowrap;
+    }
+    .filter-chip:hover { border-color: var(--primary); color: var(--primary); background: var(--accent); }
+    .filter-chip.active { border-color: var(--primary); color: var(--primary-foreground); background: var(--primary); }
+    .filter-chip .chip-count {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 18px; height: 18px; padding: 0 4px;
+      border-radius: 9999px; font-size: 0.65rem; font-weight: 700;
+    }
+    .filter-chip.active .chip-count { background: hsl(0 0% 100% / 0.25); color: var(--primary-foreground); }
+    .filter-chip:not(.active) .chip-count { background: var(--muted); color: var(--muted-foreground); }
+
+    .filter-sep { width: 1px; height: 1.5rem; background: var(--border); flex-shrink: 0; }
+
+    .results-count { font-size: 0.8rem; color: var(--muted-foreground); white-space: nowrap; margin-left: auto; }
+    .results-count strong { color: var(--foreground); font-weight: 600; }
+
+    /* ── City / Area chips rows ────────────────────────────────── */
+    .chips-row {
+      background: var(--secondary);
+      border-bottom: 1px solid var(--border);
+      padding-block: 0.75rem;
+    }
+    .chips-row + .chips-row { background: var(--background); }
+    .chips-inner { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .chips-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted-foreground); margin-right: 0.25rem; flex-shrink: 0; }
+
+    /* ── Main content ──────────────────────────────────────────── */
+    .main-content { padding-block: 2rem 4rem; }
+
+    /* ── Table wrapper ─────────────────────────────────────────── */
+    .table-wrap {
+      background: var(--background);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+
+    thead { background: var(--secondary); border-bottom: 1px solid var(--border); }
+
+    th {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted-foreground);
+      white-space: nowrap;
+      user-select: none;
+    }
+    th.sortable { cursor: pointer; }
+    th.sortable:hover { color: var(--foreground); }
+    th .th-inner { display: inline-flex; align-items: center; gap: 0.375rem; }
+    th svg { width: 12px; height: 12px; opacity: 0.4; transition: opacity 200ms; }
+    th.sorted svg { opacity: 1; color: var(--primary); }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 150ms ease;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--secondary); }
+
+    td { padding: 0.875rem 1rem; vertical-align: middle; }
+
+    /* Name cell */
+    .cell-name { display: flex; align-items: center; gap: 0.75rem; }
+    .avatar {
+      width: 2.25rem; height: 2.25rem; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: 700; flex-shrink: 0;
+      color: #fff;
+    }
+    .name-text { font-weight: 600; color: var(--foreground); line-height: 1.3; }
+    .name-sub { font-size: 0.72rem; color: var(--muted-foreground); font-weight: 400; line-height: 1.4; max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* City badge */
+    .city-badge {
+      display: inline-flex; align-items: center;
+      padding: 0.2rem 0.625rem; border-radius: 9999px;
+      font-size: 0.72rem; font-weight: 500;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    /* Area tag */
+    .area-tag {
+      display: inline-flex; align-items: center;
+      padding: 0.175rem 0.625rem; border-radius: 9999px;
+      font-size: 0.7rem; font-weight: 500;
+      white-space: nowrap;
+    }
+
+    /* Univ text */
+    .univ-text { font-size: 0.8rem; color: var(--foreground); font-weight: 500; }
+
+    /* Contact cell */
+    .contact-stack { display: flex; flex-direction: column; gap: 0.3rem; }
+    .contact-link {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      font-size: 0.78rem; color: var(--primary); font-weight: 500;
+      transition: opacity 200ms;
+    }
+    .contact-link:hover { opacity: 0.75; }
+    .contact-link svg { width: 12px; height: 12px; flex-shrink: 0; }
+    .contact-phone { font-size: 0.75rem; color: var(--muted-foreground); display: flex; align-items: center; gap: 0.25rem; }
+    .contact-phone svg { width: 11px; height: 11px; flex-shrink: 0; }
+
+    /* Actions cell */
+    .action-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 2rem; height: 2rem; border-radius: 50%;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--muted-foreground); cursor: pointer; transition: all 200ms ease;
+    }
+    .action-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--accent); }
+    .action-btn svg { width: 14px; height: 14px; }
+
+    /* ── Empty state ───────────────────────────────────────────── */
+    .empty-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+    .empty-state.visible { display: flex; }
+    .empty-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .empty-title { font-size: 1rem; font-weight: 600; color: var(--foreground); margin-bottom: 0.375rem; }
+    .empty-desc  { font-size: 0.875rem; color: var(--muted-foreground); }
+
+    /* ── Pagination ────────────────────────────────────────────── */
+    .pagination {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.25rem; border-top: 1px solid var(--border);
+      flex-wrap: wrap; gap: 0.75rem;
+    }
+    .page-info { font-size: 0.8rem; color: var(--muted-foreground); }
+    .page-btns { display: flex; gap: 0.375rem; }
+    .page-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 2rem; height: 2rem; padding: 0 0.5rem;
+      border-radius: calc(var(--radius) - 2px);
+      border: 1px solid var(--border);
+      font-size: 0.8rem; font-weight: 500;
+      background: transparent; color: var(--foreground);
+      cursor: pointer; transition: all 200ms ease;
+    }
+    .page-btn:hover, .page-btn.active { background: var(--primary); color: var(--primary-foreground); border-color: var(--primary); }
+    .page-btn:disabled { opacity: 0.4; cursor: default; }
+
+    /* ── Footer ────────────────────────────────────────────────── */
+    .site-footer { background: hsl(220 15% 12%); color: hsl(220 14% 80%); padding-block: 3rem 1.5rem; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 2.5rem; }
+    .footer-brand img { height: 2rem; width: auto; filter: brightness(0) invert(1); margin-bottom: 0.875rem; }
+    .footer-brand p { font-size: 0.8rem; line-height: 1.7; color: hsl(220 9% 60%); }
+    .footer-col-title { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: hsl(0 0% 100%); margin-bottom: 1rem; }
+    .footer-links { display: flex; flex-direction: column; gap: 0.5rem; }
+    .footer-link { font-size: 0.8rem; color: hsl(220 9% 60%); transition: color 200ms ease; }
+    .footer-link:hover { color: hsl(0 0% 100%); }
+    .footer-bottom { padding-top: 1.5rem; border-top: 1px solid hsl(220 15% 20%); display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .footer-copy { font-size: 0.75rem; color: hsl(220 9% 50%); }
+    .footer-legal { display: flex; gap: 1.5rem; }
+    .footer-legal a { font-size: 0.75rem; color: hsl(220 9% 50%); transition: color 200ms ease; }
+    .footer-legal a:hover { color: hsl(0 0% 100%); }
+
+    /* ── Responsive ────────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+      .nav-link { padding: 0.4rem 0.75rem; font-size: 0.8rem; }
+      th.hide-md, td.hide-md { display: none; }
+    }
+    @media (max-width: 768px) {
+      .menu-toggle { display: flex; }
+      nav { display: none; flex-direction: column; gap: 0.5rem; position: absolute; top: 4rem; left: 0; right: 0; background: var(--background); padding: 1rem 2rem; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-elevated); }
+      nav.open { display: flex; }
+      .nav-link { width: 100%; justify-content: center; }
+      .page-hero-stats { display: none; }
+      .filter-bar { position: static; }
+      th.hide-sm, td.hide-sm { display: none; }
+      .footer-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+      .chips-inner { gap: 0.375rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ░░ HEADER ░░ -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo-wrap" aria-label="INS — Inicio">
+        <img src="https://www.ins.gov.co/Portalweb2025/general-assets/ins-logo.png" alt="Logo Instituto Nacional de Salud"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+        <span style="display:none;align-items:center;justify-content:center;width:2.5rem;height:2.5rem;background:var(--primary);color:var(--primary-foreground);font-weight:700;font-size:0.9rem;border-radius:6px;">INS</span>
+        <div class="logo-sep"></div>
+        <span class="logo-label">Micrositio<br>Toxicología</span>
+      </a>
+      <button class="menu-toggle" aria-label="Abrir menú" onclick="this.closest('header').querySelector('nav').classList.toggle('open')">
+        <span></span><span></span><span></span>
+      </button>
+      <nav aria-label="Menú principal">
+        <a href="index.html" class="nav-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Inicio
+        </a>
+        <a href="directorio.html" class="nav-link active" aria-current="page">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Directorio
+        </a>
+        <a href="normatividad.html" class="nav-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Normatividad
+        </a>
+        <a href="documentos.html" class="nav-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M2 15h10"/><path d="m9 18 3-3-3-3"/></svg>
+          Documentos de consulta
+        </a>
+        <a href="herramientas.html" class="nav-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          Caja de Herramientas
+        </a>
+        <a href="noticias.html" class="nav-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 0-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
+          Noticias
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="flag-divider" role="presentation"><div class="seg-yellow"></div><div class="seg-blue"></div><div class="seg-red"></div></div>
+
+  <!-- ░░ PAGE HERO ░░ -->
+  <div class="page-hero">
+    <div class="container page-hero-inner">
+      <div>
+        <nav class="breadcrumb" aria-label="Ruta de navegación">
+          <a href="index.html">Inicio</a>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          <span>Directorio</span>
+        </nav>
+        <div class="page-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          Directorio RENATO
+        </div>
+        <h1 class="page-title">Toxicólogos de Colombia</h1>
+        <p class="page-desc">Red Nacional de Toxicólogos vinculados a RENATO. Profesionales especializados distribuidos en todo el territorio colombiano.</p>
+      </div>
+      <div class="page-hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-value" id="stat-total">90</div>
+          <div class="hero-stat-label">Registros totales</div>
+        </div>
+        <div class="hero-stat-sep"></div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">6</div>
+          <div class="hero-stat-label">Ciudades</div>
+        </div>
+        <div class="hero-stat-sep"></div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">6</div>
+          <div class="hero-stat-label">Universidades</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flag-divider" role="presentation"><div class="seg-yellow"></div><div class="seg-blue"></div><div class="seg-red"></div></div>
+
+  <!-- ░░ FILTER BAR ░░ -->
+  <div class="filter-bar" role="search" aria-label="Filtros del directorio">
+    <div class="container filter-inner">
+
+      <div class="search-wrap">
+        <span class="search-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </span>
+        <input id="search-input" class="search-input" type="search" placeholder="Buscar nombre, institución…" aria-label="Buscar en el directorio" />
+      </div>
+
+      <select id="univ-select" class="filter-select" aria-label="Filtrar por universidad">
+        <option value="">Todas las universidades</option>
+        <option value="U. de Antioquia">U. de Antioquia</option>
+        <option value="U. Nacional">U. Nacional</option>
+        <option value="U. del Rosario">U. del Rosario</option>
+        <option value="U. de Cartagena">U. de Cartagena</option>
+        <option value="FUCS">FUCS</option>
+        <option value="Otra">Otra</option>
+      </select>
+
+      <div class="filter-sep" role="presentation"></div>
+
+      <button id="clear-filters" class="btn btn-secondary" style="padding:0.4rem 1rem;font-size:0.8rem;" aria-label="Limpiar filtros">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        Limpiar
+      </button>
+
+      <span class="results-count" id="results-count" aria-live="polite"><strong>90</strong> resultados</span>
+    </div>
+  </div>
+
+  <!-- ░░ CITY CHIPS ░░ -->
+  <div class="chips-row">
+    <div class="container chips-inner">
+      <span class="chips-label">Ciudad:</span>
+      <button class="filter-chip active" data-city="" aria-pressed="true">
+        Todas
+        <span class="chip-count" id="count-all">90</span>
+      </button>
+      <button class="filter-chip" data-city="Bogotá" aria-pressed="false">
+        Bogotá
+        <span class="chip-count">37</span>
+      </button>
+      <button class="filter-chip" data-city="Medellín" aria-pressed="false">
+        Medellín
+        <span class="chip-count">24</span>
+      </button>
+      <button class="filter-chip" data-city="Cartagena" aria-pressed="false">
+        Cartagena
+        <span class="chip-count">12</span>
+      </button>
+      <button class="filter-chip" data-city="Otras" aria-pressed="false">
+        Otras ciudades
+        <span class="chip-count">10</span>
+      </button>
+      <button class="filter-chip" data-city="Barranquilla" aria-pressed="false">
+        Barranquilla
+        <span class="chip-count">4</span>
+      </button>
+      <button class="filter-chip" data-city="Cali" aria-pressed="false">
+        Cali
+        <span class="chip-count">3</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ░░ AREA CHIPS ░░ -->
+  <div class="chips-row" style="background:var(--background);">
+    <div class="container chips-inner">
+      <span class="chips-label">Área:</span>
+      <button class="filter-chip active" data-area="" aria-pressed="true">Todas las áreas</button>
+      <button class="filter-chip" data-area="Clínica" aria-pressed="false">Clínica</button>
+      <button class="filter-chip" data-area="Ocupacional" aria-pressed="false">Ocupacional</button>
+      <button class="filter-chip" data-area="Ambiental" aria-pressed="false">Ambiental</button>
+      <button class="filter-chip" data-area="Alimentos/Analítica" aria-pressed="false">Alimentos / Analítica</button>
+      <button class="filter-chip" data-area="Forense" aria-pressed="false">Forense</button>
+      <button class="filter-chip" data-area="Regulatoria" aria-pressed="false">Regulatoria</button>
+      <button class="filter-chip" data-area="Docencia" aria-pressed="false">Docencia</button>
+      <button class="filter-chip" data-area="Otra" aria-pressed="false">Otra</button>
+    </div>
+  </div>
+
+  <main>
+    <div class="main-content">
+      <div class="container">
+        <div class="table-wrap">
+          <table id="directory-table" aria-label="Directorio de toxicólogos RENATO">
+            <thead>
+              <tr>
+                <th class="sortable sorted" data-col="name" style="width:24%;">
+                  <div class="th-inner">Nombre / Institución
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg>
+                  </div>
+                </th>
+                <th class="sortable" data-col="city" style="width:10%;">
+                  <div class="th-inner">Ciudad
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg>
+                  </div>
+                </th>
+                <th class="sortable hide-md" data-col="univ" style="width:16%;">
+                  <div class="th-inner">Universidad
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg>
+                  </div>
+                </th>
+                <th class="sortable hide-sm" data-col="area" style="width:14%;">
+                  <div class="th-inner">Área
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg>
+                  </div>
+                </th>
+                <th class="hide-sm" style="width:20%;">Contacto</th>
+              </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+          </table>
+
+          <div class="empty-state" id="empty-state" role="status">
+            <div class="empty-icon">🔍</div>
+            <div class="empty-title">Sin resultados</div>
+            <p class="empty-desc">No se encontraron registros con los filtros aplicados.<br>Intente con otros términos o amplíe la búsqueda.</p>
+          </div>
+
+          <div class="pagination" id="pagination">
+            <span class="page-info" id="page-info">Mostrando 1–15 de 90 registros</span>
+            <div class="page-btns" id="page-btns" role="navigation" aria-label="Paginación"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="flag-divider" role="presentation"><div class="seg-yellow"></div><div class="seg-blue"></div><div class="seg-red"></div></div>
+
+  <!-- ░░ FOOTER ░░ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="https://www.ins.gov.co/Portalweb2025/general-assets/ins-logo.png" alt="Instituto Nacional de Salud"
+               onerror="this.style.display='none'" />
+          <p>El Instituto Nacional de Salud (INS) es una entidad pública de orden nacional adscrita al Ministerio de Salud y Protección Social, encargada de la investigación científica y el desarrollo tecnológico en salud pública para Colombia.</p>
+        </div>
+        <div>
+          <div class="footer-col-title">Micrositio</div>
+          <div class="footer-links">
+            <a href="index.html"        class="footer-link">Inicio</a>
+            <a href="directorio.html"   class="footer-link">Directorio</a>
+            <a href="normatividad.html" class="footer-link">Normatividad</a>
+            <a href="documentos.html"   class="footer-link">Documentos de consulta</a>
+            <a href="herramientas.html" class="footer-link">Caja de Herramientas</a>
+            <a href="noticias.html"     class="footer-link">Noticias</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">INS</div>
+          <div class="footer-links">
+            <a href="#" class="footer-link">Portal INS</a>
+            <a href="#" class="footer-link">SIVIGILA</a>
+            <a href="#" class="footer-link">Publicaciones</a>
+            <a href="#" class="footer-link">Contacto</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">Recursos externos</div>
+          <div class="footer-links">
+            <a href="#" class="footer-link">OPS / OMS</a>
+            <a href="#" class="footer-link">IPCS INCHEM</a>
+            <a href="#" class="footer-link">MSPS</a>
+            <a href="#" class="footer-link">INVIMA</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2025 Instituto Nacional de Salud — Micrositio de Toxicología. Todos los derechos reservados.</p>
+        <div class="footer-legal">
+          <a href="#">Política de privacidad</a>
+          <a href="#">Términos de uso</a>
+          <a href="#">Accesibilidad</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ░░ JS ░░ -->
+  <script>
+    /* ── Raw data ──────────────────────────────────────────────── */
+    const RAW = [
+  {name:"Marie claire Berrouet mejia",email:"Mcberrouet@hormail.com",phone:"3146320893",cityRaw:"Medellin",inst:"Soma",univRaw:"Antioquia",areaRaw:"Clínica"},
+  {name:"Jessica Morales Gutiérrez",email:"jessimorales2311@gmail.com",phone:"3154688227",cityRaw:"Cali",inst:"Actualmente en búsqueda de trabajo",univRaw:"Universidad de Antioquía",areaRaw:"No aplica"},
+  {name:"Camilo Andrés Castellanos Moreno",email:"camilo.castel@gmail.com",phone:"3125371261",cityRaw:"Bogotá",inst:"Sanofi Aventis de Colombia",univRaw:"Universidad Nacional de Colombia",areaRaw:"Industria farmacéutica y Toxicología forense"},
+  {name:"Marie claire",email:"Mcberrouet@hotmail.com",phone:"3146320893",cityRaw:"Medellín",inst:"Hospital general",univRaw:"Antioquia",areaRaw:"Clínica"},
+  {name:"Ligia Alejandra Bello Benavides",email:"alejab44@hotmail.com",phone:"3188030418",cityRaw:"Bogotá",inst:"Aruna asesores",univRaw:"FUCS",areaRaw:"Asuntos de regulatorios"},
+  {name:"Jorge Alonso Marín Cárdenas",email:"jorgeamarinc@gmail.com",phone:"3122587895",cityRaw:"Medellin",inst:"Clínica Soma, hospital Marco Fidel Suárez, universidad cooperativa de Colombia, uniremington, universidad pontificia bolivariana",univRaw:"Universidad de Antioquia",areaRaw:"Toxicología clinica"},
+  {name:"Elizabeth del Carmen Arteaga Silva",email:"earteaga@unal.edu.co",phone:"3016419411",cityRaw:"Bogotá",inst:"Remy IPS",univRaw:"Universidad Nacional",areaRaw:"Toxicología de adicciones - Psiquiatra"},
+  {name:"nancy yaneth angulo castañeda",email:"yaneth81@hotmail.com",phone:"3105593834",cityRaw:"medellin",inst:"IPS UNIVERSITARIA",univRaw:"UNIVERSIDAD DE ANTIOQUIA",areaRaw:"clinica"},
+  {name:"RENE ALEJANDRO URON PINTO",email:"URONPINTO@GMAIL.COM",phone:"3137560836",cityRaw:"Valledupar",inst:"CRUE CESAR",univRaw:"Universidad de Cartagena",areaRaw:"Toxicología ocupacional"},
+  {name:"Camilo Andrés Rojas Velandia",email:"milomdun@hotmail.com",phone:"3017128305",cityRaw:"Bogotá",inst:"Clínicos IPS",univRaw:"Universidad del Rosario",areaRaw:"Clínica"},
+  {name:"Ubier Eduardo Gómez Calzada",email:"ubiergomez@gmail.com",phone:"3122977980",cityRaw:"Medellín",inst:"Universidad de Antioquia y Clínica CES",univRaw:"Universidad de Antioquia",areaRaw:"Docencia y asistencia clínica."},
+  {name:"Jesus Alejandro Estévez García",email:"Jaestevezg@unal.edu.co",phone:"3152577563",cityRaw:"Cuernavaca, Mexico",inst:"Instituto Nacional de Salud Publica",univRaw:"Universidad Nacional de Colombia",areaRaw:"Toxicología ambiental y alimentos"},
+  {name:"Rayner Gregorio Bedoya Hernández",email:"julianbedoya3008@hotmail.com",phone:"3136611310",cityRaw:"Medellín",inst:"ESE Hospital Carisma",univRaw:"Universidad de Antioquia",areaRaw:"Toxicología clínica"},
+  {name:"Angel Alexis Muegues Salas",email:"Dr.angelazul@gmail.com",phone:"3205538305",cityRaw:"Valledupar",inst:"Fundación universitaria del área Andina",univRaw:"Universidad de Cartagena",areaRaw:"Clínica-epidemiologia"},
+  {name:"Erik Omar Juliao Pastrana",email:"erikjuliaop@gmail.com",phone:"3013982050",cityRaw:"Sincelejo",inst:"Clínica salud social",univRaw:"Universidad de Cartagena",areaRaw:"Urgencias"},
+  {name:"EDGAR AUGUSTO VELANDIA NEIRA",email:"edgar.velandia@gmail.com",phone:"3102263635",cityRaw:"BOGOTÁ  D.C.",inst:"CISPROQUIM",univRaw:"UNIVERSIDAD NACIONAL DE COLOMBIA",areaRaw:"OCUPACIONAL CLINICA"},
+  {name:"Luis Carlos Rojas Rodríguez",email:"lucar91@gmail.com",phone:"3114804908",cityRaw:"Bogotá",inst:"Clinicos IPS, Universidad del Rosario",univRaw:"Universidad del Rosario",areaRaw:"Toxicologia clínica"},
+  {name:"Manuel Jose Martinez Orozco",email:"manueljosemartinez@hotmail.com",phone:"3135250407",cityRaw:"Cartagena",inst:"Secretaria de salud / Invima / U de Cartagena",univRaw:"Universidad Nacional",areaRaw:"Clínica, regulatoria y forense"},
+  {name:"Camilo Ernesto Nemeguén Arias",email:"Kamnem82@gmail.com",phone:"3118281508",cityRaw:"Bogotá D.C.",inst:"Ministerio Salud y Protección Social",univRaw:"Universidad del Rosario",areaRaw:"Toxicología Clínica"},
+  {name:"William Giovanni Quevedo Buitrago",email:"wgquevedob@unal.edu.co",phone:"3158526209",cityRaw:"Bogotá",inst:"Universidad Nacional de Colombia, Fundación la Luz",univRaw:"Universidad Nacional de Colombia",areaRaw:"Toxicología de drogas de abuso"},
+  {name:"Gabriel Jaime Restrepo Chavarriaga",email:"gabrielrestrepo0176@gmail.com",phone:"3136228028",cityRaw:"Medellin",inst:"Universidad de Antioquia",univRaw:"Universidad de Antioquia",areaRaw:"Clinica"},
+  {name:"Jenny Alexandra Rojo Mira",email:"jennyrojomira@gmail.com",phone:"3105445004",cityRaw:"Medellín",inst:"ESE Carisma, Promedan IPS",univRaw:"Universidad de Antioquia",areaRaw:"Toxicología Clínica"},
+  {name:"Laura Manuela Jaramillo Builes",email:"manujara87@gmail.com",phone:"3218166743",cityRaw:"Bello",inst:"Secretaría de salud",univRaw:"Universidad del Rosario",areaRaw:"No área de toxicología"},
+  {name:"Maria Gabriela Garcia Orjuela",email:"Magabrielagarcia@yahoo.com",phone:"3206822940",cityRaw:"Medellin",inst:"Novartis de Colombia, consulta particular",univRaw:"Universidad de Antioquia",areaRaw:"Farmacéutica, toxicologia clínica"},
+  {name:"Viviana Andrea Diaz Rodriguez",email:"vividi8237@gmail.com",phone:"3102418979",cityRaw:"Bogotá",inst:"Ninguna",univRaw:"Fundación Universitaria de Ciencias de la salud",areaRaw:"Toxicologia clínica"},
+  {name:"Maiween Calvo Trujillo",email:"maiweencalvo@hotmail.com",phone:"3229139671",cityRaw:"Cartagena",inst:"Actualmente no estoy laborando",univRaw:"Universidad de Cartagena",areaRaw:""},
+  {name:"Alejandro Martinez Perez",email:"Alejo95@gmail.com",phone:"3507999233",cityRaw:"Rionegro y La Ceja",inst:"Clinica somer y clinica San juan de Dios la ceja",univRaw:"Universidad de Antioquia",areaRaw:"Toxicología clínica"},
+  {name:"Patricia Caro Uribe",email:"patocaro1989@gmail.com",phone:"3213710609",cityRaw:"Bogota",inst:"Clínica de Marly, Hospital San José Centro",univRaw:"Fundación universitaria de ciencias de la salud",areaRaw:"Toxicologia clinicA"},
+  {name:"Sandra Catalina Cortés Iza",email:"sccortesi@unal.edu.co",phone:"3124189678",cityRaw:"Bogotá",inst:"Ministerio de Salud y Protección Social",univRaw:"Universidad Nacional",areaRaw:"Toxicología ocupacional y ambiental"},
+  {name:"Maurix Fernando Rojas",email:"maurixfernando@gmail.com",phone:"3202350365",cityRaw:"Cali",inst:"Hospital Universitario del Valle",univRaw:"Universidad del Rosario",areaRaw:"Toxicologia clínica"},
+  {name:"Ena María Aguirre Diaz",email:"emad918@hotmail.com",phone:"3145458139",cityRaw:"Cartagena",inst:"Hospital naval y universidad Rafael Nuñez",univRaw:"Universidad de cartagena",areaRaw:"Docencia"},
+  {name:"Edna Margarita Sánchez León",email:"emsanchezl@unal.edu.co",phone:"3138921855",cityRaw:"Bogotá",inst:"Instituto Nacional de Salud",univRaw:"Universidad Nacional de Colombia",areaRaw:"Evaluación de riesgos, plaguicidas"},
+  {name:"Veronica Manosalva Jimenez",email:"veroka2240@hotmail.com",phone:"3058180429",cityRaw:"Bogotá",inst:"Hospital San José — Hospital Infantil Universitario de San José",univRaw:"Fundación Universitaria de Ciencias de la Salud",areaRaw:"Toxicologia clínica"},
+  {name:"Marlib Paloma Sánchez Torres",email:"marlibst@gmail.com",phone:"3017546737",cityRaw:"Bogotá",inst:"Instituto Nacional de Salud",univRaw:"Nacional",areaRaw:"Toxicología regulatoria"},
+  {name:"Miguel Antonio Tolosa Rodríguez",email:"matolosa@gmail.com",phone:"3173290887",cityRaw:"Bogotá",inst:"Hospital Infantil Universitario de San José",univRaw:"Universidad del Rosario",areaRaw:"Clínica, Farmacología y Comité de ética"},
+  {name:"Elin Yohana Manrique Julio",email:"elinmanriqueuis@hotmail.com",phone:"3015391215",cityRaw:"Cartagena",inst:"Estrios IPS",univRaw:"Universidad de cartagena",areaRaw:"Ocupacional"},
+  {name:"Ruber Hernando Arias Correa",email:"Ruberh622@gmail.com",phone:"3226143354",cityRaw:"Medellin",inst:"Universidad Pontificia Bolivariana y Uniremington",univRaw:"Universidad de antioquia",areaRaw:"Docencia"},
+  {name:"Senith Marcela Beleño Rodríguez",email:"sbeleno3@unisimonbolivar.edu.co",phone:"3002701680",cityRaw:"Barranquillla",inst:"Universidad Simón Bolívar y Fundación Lugar de Encuentro San Francisco de Asís, Hospital de la Universidad del Norte",univRaw:"Universidad Nacional de Colombia",areaRaw:"Toxicología Clínica"},
+  {name:"Miguel Antonio Tolosa Rodríguez",email:"matolosa@gmail.com",phone:"3173290887",cityRaw:"Bogotá",inst:"Comité de Ética de Investigación — Caimed",univRaw:"Universidad del Rosario",areaRaw:"Ética en Investigación"},
+  {name:"Myriam del Carmen Gutiérrez de Salazar",email:"myriamdelcarmengutierrez@gmail.com",phone:"3012327434",cityRaw:"Envigado (Antioquia)",inst:"Universidad de Cartagena",univRaw:"Universidad Nacional de Colombia",areaRaw:"Toxicología de Plaguicidas y Regulatoria"},
+  {name:"Andrés Felipe García Jaramillo",email:"Andresja9@hotmail.com",phone:"3043856007",cityRaw:"Medellín",inst:"Clínica Las Américas",univRaw:"Universidad de Antioquia",areaRaw:"Toxicología clínica"},
+  {name:"Nayibe Cortés Rodroguez",email:"Nayibecortes@gmail.com",phone:"3006177747",cityRaw:"Tunja",inst:"Secretaría de Salud Boyacá",univRaw:"Universidad de Antioquia",areaRaw:"Toxicología clínica"},
+  {name:"Juan Manuel Sánchez Londoño",email:"orionshine@gmail.com",phone:"3006274422",cityRaw:"Cartagena",inst:"INVIMA",univRaw:"Universidad Nacional de Colombia",areaRaw:"Alimentos"},
+  {name:"Brigith Yesenya Sierra Cano",email:"Bysierrac@unal.edu.co",phone:"3105536920",cityRaw:"Bogota",inst:"Universidad Militar Nueva Granada, Universidad Nacional de Colombia sede Bogotá y Fundación Universitaria San Martín",univRaw:"Universidad Nacional de Colombia sede Bogota",areaRaw:"Sustancias quimicas, agentes radiologicos, genotoxicidad y toxicologia ocupacional"},
+  {name:"Maria Cristina Barbosa Villada",email:"Cristibar25@gmail.com",phone:"3016162239",cityRaw:"Bogota",inst:"Clínica los Nogales y Americas BPS",univRaw:"Universidad del Rosario",areaRaw:"Toxicología Clínica"},
+  {name:"Carmen Regina Espitia Yanes",email:"cespitia27@yahoo.es",phone:"3166214413",cityRaw:"Cartagena",inst:"Secretaría Distrital de Educación Cartagena",univRaw:"Universidad Nacional de Colombia",areaRaw:"Alimentos"},
+  {name:"Karen Sarmiento",email:"ksarmiento@javeriana.edu.co",phone:"3124189746",cityRaw:"Bogota",inst:"Pontificia Universidad Javeriana",univRaw:"Universidad Nacional de Colombia",areaRaw:"Clinica e investigaciones en Venenos de animales y antivenenos"},
+  {name:"Lillyam Esther Gomez Castillo",email:"Lillyam670@gmail.com",phone:"3008158576",cityRaw:"Cartagena",inst:"SISE DEL CARIBE SAS",univRaw:"Cartagena",areaRaw:"Ocupacional"},
+  {name:"LINA MARIA PEÑA ACEVEDO",email:"lina.pena@udea.edu.co",phone:"3206769017",cityRaw:"MEDELLIN",inst:"Universidad de Antioquia",univRaw:"Universidad de Antioquia",areaRaw:"Toxicologia Clínica, ocupacional y ambiental"},
+  {name:"ISIDRO ANDRÉS TEJEDOR CASSIANI",email:"isidro.tejedor@uniminuto.edu",phone:"3145533308",cityRaw:"PITALITO, HUILA",inst:"Corporación Universitaria Minuto de Dios",univRaw:"UNIVERSIDAD NACIONAL DE COLOMBIA",areaRaw:"TOXICOLOGÍA OCUPACIONAL Y AMBIENTAL"},
+  {name:"Pilar Julieta Acosta González",email:"pilarjulieta@gmail.com",phone:"3104775783",cityRaw:"bogota",inst:"Subred Centroriente — Unidad Santa Clara",univRaw:"Rosario",areaRaw:"clínica"},
+  {name:"Carlos Alberto Molina Socarras",email:"cmolinas@unicartagena.edu.co",phone:"3116792965",cityRaw:"Valledupar",inst:"Hospital Rosario Pumarejo de Lopez ESE",univRaw:"Universidad de Cartagena",areaRaw:"Clinico"},
+  {name:"Javier Roberto Rodríguez Buitrago",email:"javier.rodriguezb@unimilitar.edu.co",phone:"3158011725",cityRaw:"Bogotá D.C.",inst:"Universidad Militar Nueva Granada",univRaw:"Universidad Nacional de Colombia",areaRaw:"Toxinología, urgencias toxicológicas, Toxicología ocupacional"},
+  {name:"HUGO ORLANDO PORTILLA PORTILLA",email:"hugoportilla@hotmail.com",phone:"3175121821",cityRaw:"Cucuta. Norte de Santander",inst:"Universidad De Santander y Universidad de Pamplona",univRaw:"Merida, Venezuela. Doctorado universidad de León. España",areaRaw:"Clinica y docencia"},
+  {name:"Olga Lucía Melo Trujillo",email:"olguitamelo@yahoo.com",phone:"3156029272",cityRaw:"Bogotá",inst:"Hospital Infantil de San José",univRaw:"Rosario",areaRaw:"Clínica"},
+  {name:"Carlos Alberto Escobar Torres",email:"caestin@hotmail.com",phone:"3156823516",cityRaw:"Cartagena",inst:"DADIS Cartagena y Universidad de Cartagena",univRaw:"Universidad Nacional",areaRaw:"Regulación y Docencia"},
+  {name:"David Andres Combariza Bayona",email:"Dacombarizab@unal.edu.co",phone:"3106298359",cityRaw:"Bogota",inst:"Universidad Nacional",univRaw:"Universidad Nacional de Colombia",areaRaw:"Ocupacional y Ambiental"},
+  {name:"Maria Francisca Olarte",email:"franciscaolarte@gmail.com",phone:"3166943285",cityRaw:"Bogota",inst:"Clínica Infantil Colsubsidio",univRaw:"Universidad d e l Rosario",areaRaw:"Tóxicologia clinica"},
+  {name:"Lineth Alarcón Franco",email:"linethalarconf@gmail.com",phone:"3127767336",cityRaw:"Medellín",inst:"Universidad de Antioquia, Universidad Cooperativa De Colombia y Clínica Clivem",univRaw:"Universidad de Antioquia",areaRaw:"Educación, Atención Clínica hospitalaria y Consulta particular"},
+  {name:"Fabio de Jesús Alzate García",email:"fabioalzategarcia@hotmail.com",phone:"3013768240",cityRaw:"Medellín",inst:"Universidad Cooperativa de Colombia, Uniremington, Laboratorio de toxicología secretaria de movilidad de Medellín",univRaw:"Universidad de Antioquia",areaRaw:"Clinica"},
+  {name:"Luz Helena Sánchez Rodríguez",email:"luzhelenasanchez@gmail.com",phone:"3176420318",cityRaw:"Bucaramanga",inst:"Universidad Industrial de Santander",univRaw:"Universidad Nacional de Colombia",areaRaw:"Toxicología analítica"},
+  {name:"Paula Andrea Fonnegra Uribe",email:"fonnegrauribe@gmail.com",phone:"3112454055",cityRaw:"Bogotá",inst:"Grupo Grammo, Ssanna, Intervenciones Existir, Clínica Marly",univRaw:"Universidad El Rosario",areaRaw:"Toxicología Clínica"},
+  {name:"Hernando Andres Olaya",email:"handresolaya@gmail.com",phone:"3112547817",cityRaw:"Bogota",inst:"Clínica del Country — FUCS",univRaw:"Universidad de Antioquia",areaRaw:"Toxicología Clínica - farmacología"},
+  {name:"Andrés Felipe Cepeda Urueña",email:"andresmdtx@gmail.com",phone:"3168771440",cityRaw:"Bogotá",inst:"Clínica Colsubsidio Roma",univRaw:"FUCS",areaRaw:"Toxicología Clínica"},
+  {name:"José Julián Aristizábal Hernández",email:"josej.aristizabal@upb.edu.co",phone:"3002218425",cityRaw:"Medellín",inst:"Clínica Universitaria Bolivariana",univRaw:"Universidad de Antioquia",areaRaw:"Toxicología Clínica"},
+  {name:"Julian Zapata Álvarez",email:"julianzapatatoxicologia@gmail.com",phone:"3017570000",cityRaw:"Medellin",inst:"Clínica CES",univRaw:"Universidad de Antioquia",areaRaw:"Clinica"},
+  {name:"Hugo Gallego Rojas",email:"hugogallego@une.net.co",phone:"3104420173",cityRaw:"Medellin",inst:"Torre Médica Las Américas — Clínica las Américas",univRaw:"Universidad de Antioquia",areaRaw:"Toxicologia Clínica"},
+  {name:"Gloria Marcela Preciado",email:"gmpreciado@fucsalud.edu.co",phone:"3004867225",cityRaw:"Bogota",inst:"Ninguna",univRaw:"FUCS",areaRaw:"Toxicologia clinica"},
+  {name:"Marielena Baquero Salamanca",email:"maryy_002@hotmail.com",phone:"3158887755",cityRaw:"Bogotá",inst:"Clínicos IPS, Universidad El Bosque",univRaw:"Universidad del Rosario",areaRaw:"Toxicología clínica y docencia"},
+  {name:"Ana Maria Restrepo Muñoz",email:"info@toxicologiacolombia.com",phone:"3004985774",cityRaw:"Medellín",inst:"Clínica las Vegas, Promedan IPS, Clínica Fundadores, Centro Unidos",univRaw:"UdeA",areaRaw:"TOXICOLOGÍA CLÍNICA"},
+  {name:"Paola Andrea Acero Triana",email:"paoacerot@gmail.com",phone:"3152113969",cityRaw:"Bogotá",inst:"Compensar",univRaw:"Universidad Nacional de Colombia",areaRaw:"Consulta externa asistida de endocrinología"},
+  {name:"Alejandra del Pilar Díaz Gómez",email:"Addiazg@unal.edu.co",phone:"3172783648",cityRaw:"Bogotá",inst:"Instituto Nacional de Salud",univRaw:"Universidad Nacional de Colombia",areaRaw:"Vigilancia epidemiológica"},
+  {name:"Claudia Lucía Arroyave Hoyos",email:"clarroyave@gmail.com",phone:"3116304914",cityRaw:"Medellín",inst:"Universidad CES",univRaw:"Universidad de Antioquia",areaRaw:"Clínica"},
+  {name:"Jaime Fernando La Rota Hernández",email:"ljaimefer@gmail.com",phone:"3006036661",cityRaw:"Bogotá",inst:"Subred Centrooriente",univRaw:"Antioquia",areaRaw:"Toxicología Clínica y Farmacovigilancia"},
+  {name:"Guillermo González Vides",email:"Vizagon17@gmail.com",phone:"3008270138",cityRaw:"Cartagena",inst:"Universidad de Cartagena",univRaw:"Universidad Nacional de Colombia",areaRaw:"Toxicología ocupacional"},
+  {name:"Angélica María Téllez Arévalo",email:"amatelleza@gmail.com",phone:"",cityRaw:"Bogotá",inst:"Hospital Universitaire San Ignacio y Clinicos IPS",univRaw:"Universidad Colegio Mayor Nuestra Senora del Rosario",areaRaw:"Toxicología Clínica y Farmacología Clínica"},
+  {name:"Dagoberto Serpa Diaz",email:"dagoserpa86@hotmail.com",phone:"3002936206",cityRaw:"Cartagena",inst:"CRUE Departamental",univRaw:"Universidad Nacional de Colombia",areaRaw:"Clinica"},
+  {name:"Diana Uribe Lopez",email:"dul48@hotmail.com",phone:"+34615457274",cityRaw:"Madrid",inst:"Hospital Clinico San Carlos",univRaw:"Universidad de Antioquia",areaRaw:"Residente Farmacologia Clinica"},
+  {name:"Diana Marcela Pava Garzón",email:"dmpavag@unal.edu.co",phone:"3212385895",cityRaw:"Bucaramanga - Bogotá",inst:"Ministerio de Salud y Protección Social, Hospital Central Policía Nacional, Universidad Nacional",univRaw:"Universidad Nacional",areaRaw:"Sustancias Psicoactivas, toxinologia, Neonatologia"},
+  {name:"Paula Andrea Castaño Arias",email:"paulaandrea216@gmail.com",phone:"3122888713",cityRaw:"Medellin",inst:"IPS Universitaria Clínica León XIII",univRaw:"Universidad de Antioquia",areaRaw:"Toxicología Clínica"},
+  {name:"Andrés Camilo Riaño La Rotta",email:"acrianoro@unal.edu.co",phone:"3102811533",cityRaw:"Bogotá",inst:"Universidad Manuela Beltrán",univRaw:"Universidad Nacional de Colombia",areaRaw:"Toxicología"},
+  {name:"Yamile Sierra Gordillo",email:"Yamilesigo@gmail.com",phone:"3115158105",cityRaw:"Bogota",inst:"Ninguna",univRaw:"Universidad de Antioquia",areaRaw:""},
+  {name:"Sara Margarita Lastra Bello",email:"sarabello2001@yahoo.com",phone:"3106605952",cityRaw:"Medellín - Bogotá",inst:"LIME — INVIMA",univRaw:"Convenio universidad de Cartagena con Universidad Nacional de Colombia",areaRaw:"CIAT y Toxicología Alimentos"},
+  {name:"Yasmira Miranda Moncada",email:"yasmirand@hotmail.com",phone:"3012081175",cityRaw:"Cartagena",inst:"Clínica Crecer",univRaw:"Universidad de Cartagena",areaRaw:"Clinica"},
+  {name:"Alejandro Gomez Arevalo",email:"doctor_alejo@yahoo.com",phone:"3112647025",cityRaw:"Bogota",inst:"Instituto Nacional de Salud",univRaw:"Universidad del Rosario",areaRaw:"Toxicología Clínica"},
+  {name:"Abdul Chalabe Julio",email:"abdulpalestino@gmail.com",phone:"3116135515",cityRaw:"Cartagena",inst:"Hospital Infantil Napoleón Franco Pareja",univRaw:"Universidad Nacional de Colombia",areaRaw:"Clínica , ocupacional."},
+  {name:"Natalia Santisteban Pérez",email:"Natalia.santistebanperez@gmail.com",phone:"3115425537",cityRaw:"Cali",inst:"Clínica Nuestra Señora de los Remedios",univRaw:"Universidad del Rosario",areaRaw:"Toxicología clínica"},
+  {name:"Agustin Guerrero Salcedo",email:"agustinguerrerosal@yahoo.es",phone:"3157228751",cityRaw:"Barranquilla",inst:"Ulibre — Hospital Niño Jesús",univRaw:"Unilibre",areaRaw:"Toxicología clínica y cupacional"},
+  {name:"Agustín Guerrero Salcedo",email:"agustinguerrerosal@yahoo.es",phone:"3257228751",cityRaw:"Barranquilla",inst:"U Libre — H Niño Jesús — Mired",univRaw:"U de Cartagena preg - U Libre S O. U Ant Toxicologia",areaRaw:"Toxicología clínica, S ocupacional"},
+  {name:"Rosana Patricia Elías Guerrero",email:"ropaelgue_gr@hotmail.com",phone:"3015632931",cityRaw:"Barranquilla",inst:"Hospital Universidad del Norte",univRaw:"Universidad de Cartagena",areaRaw:"Toxicología clínica"}
+];
+
+    /* ── Normalization ─────────────────────────────────────────── */
+    function normCity(raw) {
+      if (!raw) return 'Otras';
+      const rl = raw.trim().toLowerCase();
+      if (['medell','bello','envigado','rionegro','la ceja'].some(x => rl.includes(x))) return 'Medellín';
+      if (rl.includes('bogot')) return 'Bogotá';
+      if (rl.includes('cartagena')) return 'Cartagena';
+      if (rl.includes('cali')) return 'Cali';
+      if (rl.includes('barranquill')) return 'Barranquilla';
+      return 'Otras';
+    }
+
+    function normUniv(raw) {
+      if (!raw) return 'Otra';
+      const rl = raw.trim().toLowerCase();
+      if (rl.includes('antioquia') || rl === 'udea') return 'U. de Antioquia';
+      if (rl.includes('nacional')) return 'U. Nacional';
+      if (rl.includes('rosario')) return 'U. del Rosario';
+      if (rl.includes('cartagena')) return 'U. de Cartagena';
+      if (rl.includes('fucs') || rl.includes('ciencias de la salud')) return 'FUCS';
+      return 'Otra';
+    }
+
+    function normArea(raw) {
+      if (!raw) return 'Otra';
+      const rl = raw.trim().toLowerCase();
+      if (rl.includes('clín') || rl.includes('clinic') || rl.includes('clini')) return 'Clínica';
+      if (rl.includes('ocupacional') || rl.includes('laboral')) return 'Ocupacional';
+      if (rl.includes('ambiental')) return 'Ambiental';
+      if (rl.includes('alimento') || rl.includes('analíti') || rl.includes('analiti')) return 'Alimentos/Analítica';
+      if (rl.includes('forense')) return 'Forense';
+      if (rl.includes('regulat') || rl.includes('regulaci') || rl.includes('regulación')) return 'Regulatoria';
+      if (rl.includes('docenci') || rl.includes('educaci')) return 'Docencia';
+      return 'Otra';
+    }
+
+    function titleCase(str) {
+      if (!str) return '';
+      const trimmed = str.trim();
+      if (trimmed === trimmed.toUpperCase() && trimmed.length > 3) {
+        return trimmed.toLowerCase().replace(/(?:^|[\s\-])\S/g, c => c.toUpperCase());
+      }
+      return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+    }
+
+    function initials(name) {
+      const parts = name.trim().split(/\s+/).filter(Boolean);
+      return ((parts[0]?.[0] ?? '') + (parts[1]?.[0] ?? '')).toUpperCase();
+    }
+
+    const AVATAR_COLORS = ['#0950de','#2e7d32','#6a1b9a','#1565c0','#00695c','#e65100','#ad1457','#00838f','#4527a0','#bf360c'];
+    function avatarColor(name) {
+      let h = 0;
+      for (let i = 0; i < name.length; i++) h = ((h * 31) + name.charCodeAt(i)) >>> 0;
+      return AVATAR_COLORS[h % AVATAR_COLORS.length];
+    }
+
+    /* ── Process data ──────────────────────────────────────────── */
+    const DIRECTORY = RAW.map(r => ({
+      name:  titleCase(r.name),
+      inst:  r.inst.trim(),
+      email: r.email.trim(),
+      phone: r.phone.trim(),
+      city:  normCity(r.cityRaw),
+      univ:  normUniv(r.univRaw),
+      area:  normArea(r.areaRaw),
+    }));
+
+    /* ── Badge styles ──────────────────────────────────────────── */
+    const CITY_STYLES = {
+      'Medellín':    'background:hsl(217 93% 45% / 0.1);color:hsl(217 93% 38%);border-color:hsl(217 93% 45% / 0.3);',
+      'Bogotá':      'background:hsl(142 71% 45% / 0.1);color:hsl(142 71% 30%);border-color:hsl(142 71% 45% / 0.3);',
+      'Cartagena':   'background:hsl(38 92% 50% / 0.12);color:hsl(38 80% 28%);border-color:hsl(38 92% 50% / 0.3);',
+      'Cali':        'background:hsl(270 60% 50% / 0.1);color:hsl(270 60% 38%);border-color:hsl(270 60% 50% / 0.3);',
+      'Barranquilla':'background:hsl(0 84% 55% / 0.1);color:hsl(0 84% 38%);border-color:hsl(0 84% 55% / 0.3);',
+      'Otras':       'background:hsl(220 14% 91%);color:hsl(220 9% 42%);border-color:hsl(220 13% 78%);',
+    };
+
+    const AREA_STYLES = {
+      'Clínica':           'background:hsl(217 93% 45% / 0.1);color:hsl(217 93% 38%);',
+      'Ocupacional':       'background:hsl(142 71% 45% / 0.1);color:hsl(142 71% 30%);',
+      'Ambiental':         'background:hsl(180 65% 40% / 0.12);color:hsl(180 65% 26%);',
+      'Alimentos/Analítica':'background:hsl(38 92% 50% / 0.12);color:hsl(38 80% 28%);',
+      'Forense':           'background:hsl(270 60% 55% / 0.1);color:hsl(270 60% 38%);',
+      'Regulatoria':       'background:hsl(20 90% 50% / 0.1);color:hsl(20 80% 34%);',
+      'Docencia':          'background:hsl(240 25% 60% / 0.12);color:hsl(240 25% 36%);',
+      'Otra':              'background:hsl(220 14% 91%);color:hsl(220 9% 42%);',
+    };
+
+    /* ── State ─────────────────────────────────────────────────── */
+    const PAGE_SIZE = 15;
+    let filteredRows = [...DIRECTORY];
+    let currentPage  = 1;
+    let activeCity   = '';
+    let activeArea   = '';
+    let searchTerm   = '';
+    let univFilter   = '';
+    let sortCol = 'name', sortAsc = true;
+
+    /* ── Render ────────────────────────────────────────────────── */
+    function renderTable() {
+      const tbody = document.getElementById('table-body');
+      const empty = document.getElementById('empty-state');
+      const total = filteredRows.length;
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const slice = filteredRows.slice(start, start + PAGE_SIZE);
+
+      tbody.innerHTML = '';
+      if (total === 0) {
+        empty.classList.add('visible');
+        document.getElementById('pagination').style.display = 'none';
+      } else {
+        empty.classList.remove('visible');
+        document.getElementById('pagination').style.display = 'flex';
+        slice.forEach(r => {
+          const tr = document.createElement('tr');
+          const abbr  = initials(r.name) || '??';
+          const color = avatarColor(r.name);
+          const cStyle = CITY_STYLES[r.city] ?? CITY_STYLES['Otras'];
+          const aStyle = AREA_STYLES[r.area] ?? AREA_STYLES['Otra'];
+
+          tr.innerHTML = `
+            <td>
+              <div class="cell-name">
+                <div class="avatar" style="background:${color};" aria-hidden="true">${abbr}</div>
+                <div>
+                  <div class="name-text">${r.name}</div>
+                  <div class="name-sub" title="${r.inst}">${r.inst || '—'}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="city-badge" style="${cStyle}">${r.city}</span>
+            </td>
+            <td class="hide-md">
+              <span class="univ-text">${r.univ}</span>
+            </td>
+            <td class="hide-sm">
+              <span class="area-tag" style="${aStyle}">${r.area}</span>
+            </td>
+            <td class="hide-sm">
+              <div class="contact-stack">
+                ${r.email ? `<a href="mailto:${r.email}" class="contact-link" title="${r.email}">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                  ${r.email.length > 30 ? r.email.substring(0, 28) + '…' : r.email}
+                </a>` : ''}
+                ${r.phone ? `<span class="contact-phone">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6 6l1.27-.93a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17.18z"/></svg>
+                  ${r.phone}
+                </span>` : ''}
+              </div>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      document.getElementById('results-count').innerHTML = `<strong>${total}</strong> resultado${total !== 1 ? 's' : ''}`;
+      document.getElementById('page-info').textContent =
+        total === 0 ? 'Sin resultados'
+        : `Mostrando ${start + 1}–${Math.min(start + PAGE_SIZE, total)} de ${total} registros`;
+
+      renderPagination(total);
+    }
+
+    /* ── Quick profile tooltip ─────────────────────────────────── */
+    function showProfile(idx) {
+      const r = DIRECTORY[idx];
+      if (!r) return;
+      const info = [
+        r.name,
+        r.inst ? `Institución: ${r.inst}` : '',
+        `Ciudad: ${r.city}`,
+        `Universidad: ${r.univ}`,
+        `Área: ${r.area}`,
+        r.email ? `Email: ${r.email}` : '',
+        r.phone ? `Tel: ${r.phone}` : '',
+      ].filter(Boolean).join('\n');
+      alert(info);
+    }
+
+    /* ── Pagination ────────────────────────────────────────────── */
+    function renderPagination(total) {
+      const pages = Math.ceil(total / PAGE_SIZE);
+      const container = document.getElementById('page-btns');
+      container.innerHTML = '';
+      if (pages <= 1) return;
+
+      const addBtn = (label, page, disabled = false, active = false) => {
+        const btn = document.createElement('button');
+        btn.className = 'page-btn' + (active ? ' active' : '');
+        btn.innerHTML = label;
+        btn.disabled = disabled;
+        btn.setAttribute('aria-label', `Página ${page}`);
+        if (!disabled && !active) btn.addEventListener('click', () => { currentPage = page; renderTable(); });
+        container.appendChild(btn);
+      };
+
+      addBtn('&#8592;', currentPage - 1, currentPage === 1);
+      for (let i = 1; i <= pages; i++) {
+        if (i === 1 || i === pages || Math.abs(i - currentPage) <= 1) {
+          addBtn(i, i, false, i === currentPage);
+        } else if (Math.abs(i - currentPage) === 2) {
+          const dots = document.createElement('span');
+          dots.textContent = '…';
+          dots.style.cssText = 'display:inline-flex;align-items:center;padding:0 0.25rem;color:var(--muted-foreground);font-size:0.8rem;';
+          container.appendChild(dots);
+        }
+      }
+      addBtn('&#8594;', currentPage + 1, currentPage === pages);
+    }
+
+    /* ── Filter logic ──────────────────────────────────────────── */
+    function applyFilters() {
+      const q = searchTerm.toLowerCase();
+      filteredRows = DIRECTORY.filter(r => {
+        const matchCity  = !activeCity  || r.city  === activeCity;
+        const matchArea  = !activeArea  || r.area  === activeArea;
+        const matchUniv  = !univFilter  || r.univ  === univFilter;
+        const matchSearch = !q
+          || r.name.toLowerCase().includes(q)
+          || r.inst.toLowerCase().includes(q)
+          || r.city.toLowerCase().includes(q)
+          || r.univ.toLowerCase().includes(q)
+          || r.area.toLowerCase().includes(q)
+          || r.email.toLowerCase().includes(q);
+        return matchCity && matchArea && matchUniv && matchSearch;
+      });
+      filteredRows.sort((a, b) => {
+        const av = a[sortCol] ?? ''; const bv = b[sortCol] ?? '';
+        return sortAsc ? av.localeCompare(bv, 'es') : bv.localeCompare(av, 'es');
+      });
+      currentPage = 1;
+      renderTable();
+    }
+
+    /* ── City chips ────────────────────────────────────────────── */
+    document.querySelectorAll('.filter-chip[data-city]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-chip[data-city]').forEach(b => {
+          b.classList.remove('active'); b.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true');
+        activeCity = btn.dataset.city;
+        applyFilters();
+      });
+    });
+
+    /* ── Area chips ────────────────────────────────────────────── */
+    document.querySelectorAll('.filter-chip[data-area]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-chip[data-area]').forEach(b => {
+          b.classList.remove('active'); b.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true');
+        activeArea = btn.dataset.area;
+        applyFilters();
+      });
+    });
+
+    /* ── Search ────────────────────────────────────────────────── */
+    const searchEl = document.getElementById('search-input');
+    let searchTimer;
+    searchEl.addEventListener('input', e => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => { searchTerm = e.target.value.trim(); applyFilters(); }, 250);
+    });
+
+    /* ── University select ─────────────────────────────────────── */
+    document.getElementById('univ-select').addEventListener('change', e => {
+      univFilter = e.target.value; applyFilters();
+    });
+
+    /* ── Clear ─────────────────────────────────────────────────── */
+    document.getElementById('clear-filters').addEventListener('click', () => {
+      searchEl.value = '';
+      document.getElementById('univ-select').value = '';
+      searchTerm = ''; univFilter = ''; activeCity = ''; activeArea = '';
+      document.querySelectorAll('.filter-chip[data-city]').forEach((b, i) => {
+        b.classList.toggle('active', i === 0); b.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
+      });
+      document.querySelectorAll('.filter-chip[data-area]').forEach((b, i) => {
+        b.classList.toggle('active', i === 0); b.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
+      });
+      applyFilters();
+    });
+
+    /* ── Column sort ───────────────────────────────────────────── */
+    document.querySelectorAll('th.sortable').forEach(th => {
+      th.addEventListener('click', () => {
+        const col = th.dataset.col;
+        if (sortCol === col) { sortAsc = !sortAsc; }
+        else { sortCol = col; sortAsc = true; }
+        document.querySelectorAll('th.sortable').forEach(t => t.classList.remove('sorted'));
+        th.classList.add('sorted');
+        applyFilters();
+      });
+    });
+
+    /* ── Init ──────────────────────────────────────────────────── */
+    applyFilters();
+  </script>
+</body>
+</html>

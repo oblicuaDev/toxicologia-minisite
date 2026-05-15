@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Documentos de consulta — Micrositio Toxicología INS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --background:           hsl(0 0% 100%);
+      --foreground:           hsl(220 15% 15%);
+      --card:                 hsl(220 14% 98%);
+      --primary:              hsl(217 93% 45%);
+      --primary-foreground:   hsl(0 0% 100%);
+      --secondary:            hsl(220 14% 96%);
+      --muted:                hsl(220 14% 96%);
+      --muted-foreground:     hsl(220 9% 46%);
+      --accent:               hsl(217 90% 96%);
+      --accent-foreground:    hsl(217 93% 40%);
+      --success:              hsl(142 71% 45%);
+      --warning:              hsl(38 92% 50%);
+      --border:               hsl(220 13% 88%);
+      --input:                hsl(220 13% 91%);
+      --radius:               0.625rem;
+      --shadow-card:          0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+      --shadow-elevated:      0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', sans-serif; background: var(--background); color: var(--foreground); font-size: 1rem; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+    .container { width: 100%; max-width: 1400px; margin-inline: auto; padding-inline: 2rem; }
+
+    .flag-divider { width: 100%; height: 4px; display: flex; }
+    .flag-divider .seg-yellow { flex: 2; background: #FCD116; }
+    .flag-divider .seg-blue   { flex: 1; background: #003893; }
+    .flag-divider .seg-red    { flex: 1; background: #CE1126; }
+
+    /* Header */
+    .site-header { position: sticky; top: 0; z-index: 50; height: 4rem; background: hsl(0 0% 100% / 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+    .header-inner { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
+    .logo-wrap { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+    .logo-wrap img { height: 2.5rem; width: auto; }
+    .logo-sep { width: 1px; height: 1.5rem; background: var(--border); }
+    .logo-label { font-size: 0.8rem; font-weight: 600; color: var(--primary); line-height: 1.2; max-width: 160px; }
+    nav { display: flex; align-items: center; gap: 0.5rem; }
+    .nav-link { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; border-radius: 9999px; border: 1px solid var(--border); background: transparent; color: var(--foreground); transition: all 200ms ease; white-space: nowrap; }
+    .nav-link:hover, .nav-link.active { background: var(--primary); color: var(--primary-foreground); border-color: var(--primary); }
+    .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 0.5rem; border: none; background: none; }
+    .menu-toggle span { display: block; width: 22px; height: 2px; background: var(--foreground); border-radius: 2px; }
+
+    /* Page hero */
+    .page-hero { background: var(--secondary); border-bottom: 1px solid var(--border); padding-block: 2.5rem; }
+    .page-hero-inner { display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+    .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: var(--muted-foreground); margin-bottom: 0.75rem; }
+    .breadcrumb a { color: var(--primary); }
+    .breadcrumb svg { width: 12px; height: 12px; }
+    .page-label { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary); margin-bottom: 0.5rem; }
+    .page-title { font-size: 1.875rem; font-weight: 600; letter-spacing: -0.02em; color: var(--foreground); margin-bottom: 0.375rem; }
+    .page-desc { font-size: 0.95rem; line-height: 1.6; color: var(--muted-foreground); max-width: 560px; }
+
+    /* Document list */
+    .doc-list-wrap { padding-block: 1.5rem 4rem; }
+    .doc-list { display: flex; flex-direction: column; background: var(--background); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-card); max-width: 700px; margin-inline: auto; }
+
+    /* List header */
+    .doc-list-header { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 0.75rem; padding: 0.625rem 1rem; background: var(--secondary); border-bottom: 1px solid var(--border); }
+    .list-col-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted-foreground); cursor: pointer; display: flex; align-items: center; gap: 0.25rem; user-select: none; }
+    .list-col-label:hover { color: var(--foreground); }
+    .list-col-label svg { width: 11px; height: 11px; opacity: 0.5; }
+    .list-col-label.sorted { color: var(--primary); }
+    .list-col-label.sorted svg { opacity: 1; }
+
+    /* Document row */
+    .doc-row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); transition: background 150ms; }
+    .doc-row:last-child { border-bottom: none; }
+    .doc-row:hover { background: hsl(220 14% 97%); }
+
+    /* File icon */
+    .doc-icon { width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .doc-icon svg { width: 20px; height: 20px; }
+    .icon-pdf  { background: hsl(0 84% 60% / 0.1);   color: hsl(0 84% 50%); }
+    .icon-word { background: hsl(217 93% 45% / 0.1);  color: var(--primary); }
+    .icon-link { background: hsl(195 80% 45% / 0.1);  color: hsl(195 80% 35%); }
+
+    /* Title block */
+    .doc-title-block { display: flex; align-items: center; gap: 0.75rem; min-width: 0; }
+    .doc-title { font-size: 0.875rem; font-weight: 600; color: var(--foreground); line-height: 1.35; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    .doc-sub { font-size: 0.72rem; color: var(--muted-foreground); margin-top: 0.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Category badge */
+    .cat-badge { display: inline-flex; align-items: center; padding: 0.2rem 0.625rem; border-radius: 9999px; font-size: 0.68rem; font-weight: 600; white-space: nowrap; }
+    .cat-articulo   { background: hsl(217 93% 45% / 0.1); color: var(--primary); }
+    .cat-informe    { background: hsl(142 71% 45% / 0.1); color: hsl(142 71% 33%); }
+    .cat-manual     { background: hsl(38 92% 50% / 0.1);  color: hsl(38 92% 35%); }
+    .cat-protocolo  { background: hsl(270 60% 50% / 0.1); color: hsl(270 60% 40%); }
+    .cat-boletin    { background: hsl(0 84% 60% / 0.1);   color: hsl(0 84% 45%); }
+    .cat-tesis      { background: hsl(195 80% 45% / 0.1); color: hsl(195 80% 35%); }
+
+    .doc-year  { font-size: 0.8rem; font-weight: 500; color: var(--foreground); }
+    .doc-entity { font-size: 0.72rem; color: var(--muted-foreground); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .doc-size  { font-size: 0.8rem; color: var(--muted-foreground); }
+
+    /* Access badge */
+    .access-badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.5rem; border-radius: 9999px; font-size: 0.68rem; font-weight: 600; }
+    .access-libre  { background: hsl(142 71% 45% / 0.1); color: hsl(142 71% 33%); }
+    .access-restringido { background: hsl(38 92% 50% / 0.1); color: hsl(38 92% 35%); }
+
+    .doc-actions { display: flex; align-items: center; justify-content: flex-end; gap: 0.375rem; }
+    .act-btn { display: inline-flex; align-items: center; justify-content: center; width: 1.875rem; height: 1.875rem; border-radius: calc(var(--radius) - 2px); border: 1px solid var(--border); background: transparent; color: var(--muted-foreground); cursor: pointer; transition: all 200ms; }
+    .act-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--accent); }
+    .act-btn svg { width: 14px; height: 14px; }
+    .act-btn-dl { border-color: hsl(0 84% 60% / 0.4); color: hsl(0 84% 50%); }
+    .act-btn-dl:hover { border-color: hsl(0 84% 50%); background: hsl(0 84% 60% / 0.08); color: hsl(0 84% 45%); }
+
+    /* Empty / Pagination */
+    .empty-state { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 4rem 2rem; text-align: center; }
+    .empty-state.visible { display: flex; }
+    .empty-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .empty-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.375rem; }
+    .empty-desc { font-size: 0.875rem; color: var(--muted-foreground); }
+    .pagination { display: flex; align-items: center; justify-content: space-between; padding: 0.875rem 1rem; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 0.75rem; background: var(--secondary); }
+    .page-info { font-size: 0.8rem; color: var(--muted-foreground); }
+    .page-btns { display: flex; gap: 0.375rem; }
+    .page-btn { display: inline-flex; align-items: center; justify-content: center; min-width: 2rem; height: 2rem; padding: 0 0.5rem; border-radius: calc(var(--radius) - 2px); border: 1px solid var(--border); font-size: 0.8rem; font-weight: 500; background: transparent; color: var(--foreground); cursor: pointer; transition: all 200ms; font-family: 'Poppins', sans-serif; }
+    .page-btn:hover, .page-btn.active { background: var(--primary); color: var(--primary-foreground); border-color: var(--primary); }
+    .page-btn:disabled { opacity: 0.4; cursor: default; pointer-events: none; }
+
+    /* Footer */
+    .site-footer { background: hsl(220 15% 12%); color: hsl(220 14% 80%); padding-block: 3rem 1.5rem; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 2.5rem; }
+    .footer-brand img { height: 2rem; filter: brightness(0) invert(1); margin-bottom: 0.875rem; }
+    .footer-brand p { font-size: 0.8rem; line-height: 1.7; color: hsl(220 9% 60%); }
+    .footer-col-title { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: hsl(0 0% 100%); margin-bottom: 1rem; }
+    .footer-links { display: flex; flex-direction: column; gap: 0.5rem; }
+    .footer-link { font-size: 0.8rem; color: hsl(220 9% 60%); transition: color 200ms; }
+    .footer-link:hover { color: hsl(0 0% 100%); }
+    .footer-bottom { padding-top: 1.5rem; border-top: 1px solid hsl(220 15% 20%); display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .footer-copy { font-size: 0.75rem; color: hsl(220 9% 50%); }
+    .footer-legal { display: flex; gap: 1.5rem; }
+    .footer-legal a { font-size: 0.75rem; color: hsl(220 9% 50%); transition: color 200ms; }
+    .footer-legal a:hover { color: hsl(0 0% 100%); }
+
+    @media (max-width: 1100px) {
+      .doc-list-header, .doc-row { grid-template-columns: 2rem 1fr 140px 80px 100px 90px; }
+      .doc-list-header > *:nth-child(6), .doc-row > *:nth-child(6) { display: none; }
+    }
+    @media (max-width: 860px) {
+      .doc-list-header, .doc-row { grid-template-columns: 1fr 130px 80px 90px; }
+      .doc-list-header > *:nth-child(1), .doc-list-header > *:nth-child(5),
+      .doc-row > *:nth-child(1), .doc-row > *:nth-child(5) { display: none; }
+    }
+    @media (max-width: 640px) {
+      .doc-list-header { display: none; }
+      .doc-row { grid-template-columns: 1fr auto; }
+      .doc-row > *:nth-child(n+3) { display: none; }
+      .footer-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .menu-toggle { display: flex; }
+      nav { display: none; flex-direction: column; position: absolute; top: 4rem; left: 0; right: 0; background: var(--background); padding: 1rem 2rem; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-elevated); }
+      nav.open { display: flex; }
+      .nav-link { width: 100%; justify-content: center; }
+      .toolbar { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo-wrap">
+        <img src="https://www.ins.gov.co/Portalweb2025/general-assets/ins-logo.png" alt="INS"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+        <span style="display:none;align-items:center;justify-content:center;width:2.5rem;height:2.5rem;background:var(--primary);color:var(--primary-foreground);font-weight:700;font-size:0.9rem;border-radius:6px;">INS</span>
+        <div class="logo-sep"></div>
+        <span class="logo-label">Micrositio<br>Toxicología</span>
+      </a>
+      <button class="menu-toggle" aria-label="Menú" onclick="this.closest('header').querySelector('nav').classList.toggle('open')">
+        <span></span><span></span><span></span>
+      </button>
+      <nav aria-label="Menú principal">
+        <a href="index.html" class="nav-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Inicio</a>
+        <a href="directorio.html" class="nav-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Directorio</a>
+        <a href="normatividad.html" class="nav-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Normatividad</a>
+        <a href="documentos.html" class="nav-link active" aria-current="page"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M2 15h10"/><path d="m9 18 3-3-3-3"/></svg>Documentos de consulta</a>
+        <a href="herramientas.html" class="nav-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Caja de Herramientas</a>
+        <a href="noticias.html" class="nav-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 0-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>Noticias</a>
+      </nav>
+    </div>
+  </header>
+  <div class="flag-divider"><div class="seg-yellow"></div><div class="seg-blue"></div><div class="seg-red"></div></div>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <div class="container page-hero-inner">
+      <div>
+        <nav class="breadcrumb">
+          <a href="index.html">Inicio</a>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          <span>Documentos de consulta</span>
+        </nav>
+        <div class="page-label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>Repositorio documental</div>
+        <h1 class="page-title">Documentos de consulta</h1>
+        <p class="page-desc">Biblioteca de artículos científicos, informes epidemiológicos, manuales, protocolos, boletines y tesis relacionadas con toxicología en salud pública.</p>
+      </div>
+    </div>
+  </div>
+  <div class="flag-divider"><div class="seg-yellow"></div><div class="seg-blue"></div><div class="seg-red"></div></div>
+
+  <main>
+    <div class="doc-list-wrap">
+      <div class="container">
+        <div class="doc-list" id="doc-list">
+          <div class="doc-list-header">
+            <div class="list-col-label sorted" data-sort="title">Título del documento <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/></svg></div>
+            <div style="text-align:right;font-size:0.7rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted-foreground);">Descargar</div>
+          </div>
+          <div id="rows-container"></div>
+          <div class="empty-state" id="empty-state">
+            <div class="empty-icon">📚</div>
+            <div class="empty-title">Sin resultados</div>
+            <p class="empty-desc">No se encontraron documentos con los filtros aplicados.</p>
+          </div>
+          <div class="pagination" id="pagination">
+            <span class="page-info" id="page-info"></span>
+            <div class="page-btns" id="page-btns"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="flag-divider"><div class="seg-yellow"></div><div class="seg-blue"></div><div class="seg-red"></div></div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="https://www.ins.gov.co/Portalweb2025/general-assets/ins-logo.png" alt="INS" onerror="this.style.display='none'" />
+          <p>Instituto Nacional de Salud — entidad pública adscrita al Ministerio de Salud y Protección Social de Colombia.</p>
+        </div>
+        <div><div class="footer-col-title">Micrositio</div><div class="footer-links"><a href="index.html" class="footer-link">Inicio</a><a href="directorio.html" class="footer-link">Directorio</a><a href="normatividad.html" class="footer-link">Normatividad</a><a href="documentos.html" class="footer-link">Documentos de consulta</a><a href="herramientas.html" class="footer-link">Caja de Herramientas</a><a href="noticias.html" class="footer-link">Noticias</a></div></div>
+        <div><div class="footer-col-title">INS</div><div class="footer-links"><a href="#" class="footer-link">Portal INS</a><a href="#" class="footer-link">SIVIGILA</a><a href="#" class="footer-link">Publicaciones</a><a href="#" class="footer-link">Contacto</a></div></div>
+        <div><div class="footer-col-title">Recursos</div><div class="footer-links"><a href="#" class="footer-link">OPS / OMS</a><a href="#" class="footer-link">IPCS INCHEM</a><a href="#" class="footer-link">PubMed</a><a href="#" class="footer-link">LILACS</a></div></div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2025 Instituto Nacional de Salud — Micrositio de Toxicología.</p>
+        <div class="footer-legal"><a href="#">Política de privacidad</a><a href="#">Términos de uso</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  const DOCS = [
+    { title:"Animales Venenosos de la Región Andina", fuente:"OPS/OMS", cat:"Manual", year:"2020", idioma:"Español", acceso:"Libre", size:"1.3 MB", pages:6, doi:"", file:"documentos-consulta/Animales venenosos Región Andina.pdf" },
+    { title:"EPA-HQ-OPP-2023-0474-0066 — Technical Support Document", fuente:"U.S. Environmental Protection Agency (EPA)", cat:"Informe", year:"2023", idioma:"Inglés", acceso:"Libre", size:"510 KB", pages:19, doi:"", file:"documentos-consulta/EPA-HQ-OPP-2023-0474-0066_content.pdf" },
+    { title:"Guía de Manejo de Emergencias Toxicológicas", fuente:"INS", cat:"Manual", year:"2013", idioma:"Español", acceso:"Libre", size:"13 MB", pages:680, doi:"", file:"documentos-consulta/guia-manejo-emergencias-toxicologicas.pdf" },
+    { title:"Protocolo Clínico de Atención Integral en Salud a Personas en Riesgo o con Situaciones de Exposición a Mercurio y sus Compuestos", fuente:"MSPS", cat:"Protocolo", year:"2018", idioma:"Español", acceso:"Libre", size:"24 MB", pages:117, doi:"", file:"documentos-consulta/protocolo-clinico-atencion-integral-salud-personas-riesgo-situaciones-exposicion-mercurio-compuestos.pdf" },
+  ];
+
+  const PAGE_SIZE = 15;
+  let filtered = [...DOCS];
+  let page = 1;
+  let sortCol = "title", sortAsc = true;
+
+  const CAT_CLASS = {
+    "Artículo científico": "cat-articulo",
+    "Informe":             "cat-informe",
+    "Manual":              "cat-manual",
+    "Protocolo":           "cat-protocolo",
+    "Boletín":             "cat-boletin",
+    "Tesis":               "cat-tesis",
+  };
+
+  function iconFor(cat) {
+    if (cat === "Artículo científico" || cat === "Tesis") return `<div class="doc-icon icon-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>`;
+    return `<div class="doc-icon icon-pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15h6"/><path d="M9 11h4"/></svg></div>`;
+  }
+
+  function render() {
+    const container = document.getElementById("rows-container");
+    const empty = document.getElementById("empty-state");
+    const total = filtered.length;
+    const start = (page - 1) * PAGE_SIZE;
+    const slice = filtered.slice(start, start + PAGE_SIZE);
+
+    container.innerHTML = "";
+    if (total === 0) {
+      empty.classList.add("visible");
+      document.getElementById("pagination").style.display = "none";
+    } else {
+      empty.classList.remove("visible");
+      document.getElementById("pagination").style.display = "flex";
+      slice.forEach(d => {
+        const row = document.createElement("div");
+        row.className = "doc-row";
+        row.innerHTML = `
+          <div class="doc-title-block">
+            ${iconFor(d.cat)}
+            <div class="doc-title">${d.title}</div>
+          </div>
+          <div class="doc-actions">
+            <a href="${d.file}" target="_blank" class="act-btn act-btn-dl" title="Descargar" aria-label="Descargar documento">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </a>
+          </div>`;
+        container.appendChild(row);
+      });
+    }
+
+    document.getElementById("page-info").textContent = total === 0 ? "Sin resultados"
+      : `Mostrando ${start + 1}–${Math.min(start + PAGE_SIZE, total)} de ${total} documentos`;
+    renderPag(total);
+  }
+
+  function renderPag(total) {
+    const pages = Math.ceil(total / PAGE_SIZE);
+    const pb = document.getElementById("page-btns");
+    pb.innerHTML = "";
+    if (pages <= 1) return;
+    const add = (label, p, dis = false, act = false) => {
+      const b = document.createElement("button");
+      b.className = "page-btn" + (act ? " active" : "");
+      b.innerHTML = label; b.disabled = dis;
+      if (!dis && !act) b.onclick = () => { page = p; render(); };
+      pb.appendChild(b);
+    };
+    add("&#8592;", page - 1, page === 1);
+    for (let i = 1; i <= pages; i++) {
+      if (i === 1 || i === pages || Math.abs(i - page) <= 1) add(i, i, false, i === page);
+      else if (Math.abs(i - page) === 2) { const s = document.createElement("span"); s.textContent = "…"; s.style.cssText = "display:inline-flex;align-items:center;padding:0 .25rem;color:var(--muted-foreground);font-size:.8rem;"; pb.appendChild(s); }
+    }
+    add("&#8594;", page + 1, page === pages);
+  }
+
+  function applyFilters() {
+    filtered = [...DOCS];
+    filtered.sort((a, b) => {
+      const av = a[sortCol] ?? "", bv = b[sortCol] ?? "";
+      return sortAsc ? av.localeCompare(bv, "es") : bv.localeCompare(av, "es");
+    });
+    page = 1; render();
+  }
+
+  document.querySelectorAll(".list-col-label[data-sort]").forEach(el => {
+    el.addEventListener("click", () => {
+      const col = el.dataset.sort;
+      sortAsc = (sortCol === col) ? !sortAsc : true;
+      sortCol = col;
+      document.querySelectorAll(".list-col-label").forEach(e => e.classList.remove("sorted"));
+      el.classList.add("sorted");
+      applyFilters();
+    });
+  });
+
+  applyFilters();
+  </script>
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Noticias — Micrositio Toxicología INS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --background:           hsl(0 0% 100%);
+      --foreground:           hsl(220 15% 15%);
+      --card:                 hsl(220 14% 98%);
+      --primary:              hsl(217 93% 45%);
+      --primary-foreground:   hsl(0 0% 100%);
+      --secondary:            hsl(220 14% 96%);
+      --muted:                hsl(220 14% 96%);
+      --muted-foreground:     hsl(220 9% 46%);
+      --accent:               hsl(217 90% 96%);
+      --accent-foreground:    hsl(217 93% 40%);
+      --success:              hsl(142 71% 45%);
+      --warning:              hsl(38 92% 50%);
+      --border:               hsl(220 13% 88%);
+      --input:                hsl(220 13% 91%);
+      --radius:               0.625rem;
+      --shadow-card:          0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+      --shadow-card-hover:    0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+      --shadow-elevated:      0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', sans-serif; background: var(--background); color: var(--foreground); font-size: 1rem; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+    .container { width: 100%; max-width: 1400px; margin-inline: auto; padding-inline: 2rem; }
+
+    .flag-divider { width: 100%; height: 4px; display: flex; }
+    .flag-divider .seg-yellow { flex: 2; background: #FCD116; }
+    .flag-divider .seg-blue   { flex: 1; background: #003893; }
+    .flag-divider .seg-red    { flex: 1; background: #CE1126; }
+
+    /* ── Header ────────────────────────────────────────────────── */
+    .site-header { position: sticky; top: 0; z-index: 50; height: 4rem; background: hsl(0 0% 100% / 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+    .header-inner { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
+    .logo-wrap { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+    .logo-wrap img { height: 2.5rem; width: auto; }
+    .logo-sep { width: 1px; height: 1.5rem; background: var(--border); }
+    .logo-label { font-size: 0.8rem; font-weight: 600; color: var(--primary); line-height: 1.2; max-width: 160px; }
+    nav { display: flex; align-items: center; gap: 0.5rem; }
+    .nav-link { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; border-radius: 9999px; border: 1px solid var(--border); background: transparent; color: var(--foreground); transition: all 200ms ease; white-space: nowrap; }
+    .nav-link:hover, .nav-link.active { background: var(--primary); color: var(--primary-foreground); border-color: var(--primary); }
+    .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 0.5rem; border: none; background: none; }
+    .menu-toggle span { display: block; width: 22px; height: 2px; background: var(--foreground); border-radius: 2px; }
+
+    /* ── Page hero ─────────────────────────────────────────────── */
+    .page-hero { background: var(--secondary); border-bottom: 1px solid var(--border); padding-block: 2.5rem; }
+    .page-hero-inner { display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+    .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: var(--muted-foreground); margin-bottom: 0.75rem; }
+    .breadcrumb a { color: var(--primary); }
+    .breadcrumb svg { width: 12px; height: 12px; }
+    .page-label { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary); margin-bottom: 0.5rem; }
+    .page-title { font-size: 1.875rem; font-weight: 600; letter-spacing: -0.02em; color: var(--foreground); margin-bottom: 0.375rem; }
+    .page-desc { font-size: 0.95rem; line-height: 1.6; color: var(--muted-foreground); max-width: 560px; }
+
+    /* ── Main layout ───────────────────────────────────────────── */
+    .main-content { padding-block: 2.5rem 5rem; }
+
+    /* ── Article grid ──────────────────────────────────────────── */
+    .articles-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+    .article-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-card); transition: all 200ms; cursor: pointer; display: flex; flex-direction: column; }
+    .article-card:hover { box-shadow: var(--shadow-card-hover); border-color: hsl(217 93% 45% / 0.3); transform: translateY(-2px); }
+    .card-img { height: 120px; overflow: hidden; }
+    .card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .card-body { padding: 1rem; display: flex; flex-direction: column; flex: 1; }
+    .card-tag { display: inline-flex; align-items: center; padding: 0.175rem 0.625rem; border-radius: 9999px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 0.5rem; align-self: flex-start; }
+    .card-title { font-size: 0.875rem; font-weight: 600; line-height: 1.4; color: var(--foreground); margin-bottom: 0.4rem; }
+    .card-excerpt { font-size: 0.78rem; line-height: 1.6; color: var(--muted-foreground); flex: 1; margin-bottom: 0.75rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+    .card-meta { display: flex; align-items: center; gap: 0.5rem; font-size: 0.7rem; color: var(--muted-foreground); padding-top: 0.75rem; border-top: 1px solid var(--border); flex-wrap: wrap; }
+    .card-meta .meta-sep { width: 3px; height: 3px; border-radius: 50%; background: var(--border); }
+    .card-read-more { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; color: var(--primary); transition: gap 200ms; margin-top: 0.5rem; }
+    .article-card:hover .card-read-more { gap: 0.5rem; }
+    .card-read-more svg { width: 12px; height: 12px; }
+
+    /* Tag color variants */
+    .tag-alerta       { background: hsl(0 84% 60% / 0.1);   color: hsl(0 84% 44%); }
+    .tag-boletin      { background: hsl(217 93% 45% / 0.1); color: var(--primary); }
+    .tag-evento       { background: hsl(270 60% 50% / 0.1); color: hsl(270 60% 40%); }
+    .tag-publicacion  { background: hsl(142 71% 45% / 0.1); color: hsl(142 71% 33%); }
+    .tag-capacitacion { background: hsl(38 92% 50% / 0.1);  color: hsl(38 92% 34%); }
+    .tag-investigacion{ background: hsl(195 80% 45% / 0.1); color: hsl(195 80% 34%); }
+
+    /* ── Load more ─────────────────────────────────────────────── */
+
+    /* ── Empty state ───────────────────────────────────────────── */
+    .empty-state { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 4rem 2rem; text-align: center; }
+    .empty-state.visible { display: flex; }
+    .empty-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .empty-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.375rem; }
+    .empty-desc { font-size: 0.875rem; color: var(--muted-foreground); }
+
+    /* ── Footer ────────────────────────────────────────────────── */
+    .site-footer { background: hsl(220 15% 12%); color: hsl(220 14% 80%); padding-block: 3rem 1.5rem; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 2.5rem; }
+    .footer-brand img { height: 2rem; filter: brightness(0) invert(1); margin-bottom: 0.875rem; }
+    .footer-brand p { font-size: 0.8rem; line-height: 1.7; color: hsl(220 9% 60%); }
+    .footer-col-title { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: hsl(0 0% 100%); margin-bottom: 1rem; }
+    .footer-links { display: flex; flex-direction: column; gap: 0.5rem; }
+    .footer-link { font-size: 0.8rem; color: hsl(220 9% 60%); transition: color 200ms; }
+    .footer-link:hover { color: hsl(0 0% 100%); }
+    .footer-bottom { padding-top: 1.5rem; border-top: 1px solid hsl(220 15% 20%); display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .footer-copy { font-size: 0.75rem; color: hsl(220 9% 50%); }
+    .footer-legal { display: flex; gap: 1.5rem; }
+    .footer-legal a { font-size: 0.75rem; color: hsl(220 9% 50%); transition: color 200ms; }
+    .footer-legal a:hover { color: hsl(0 0% 100%); }
+
+    /* ── Responsive ────────────────────────────────────────────── */
+    @media (max-width: 1100px) {
+      .articles-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .articles-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .articles-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .footer-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+      .menu-toggle { display: flex; }
+      nav { display: none; flex-direction: column; position: absolute; top: 4rem; left: 0; right: 0; background: var(--background); padding: 1rem 2rem; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-elevated); }
+      nav.open { display: flex; }
+      .nav-link { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo-wrap">
+        <img src="https://www.ins.gov.co/Portalweb2025/general-assets/ins-logo.png" alt="INS"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+        <span style="display:none;align-items:center;justify-content:center;width:2.5rem;height:2.5rem;background:var(--primary);color:var(--primary-foreground);font-weight:700;font-size:0.9rem;border-radius:6px;">INS</span>
+        <div class="logo-sep"></div>
+        <span class="logo-label">Micrositio<br>Toxicología</span>
+      </a>
+      <button class="menu-toggle" aria-label="Menú" onclick="this.closest('header').querySelector('nav').classList.toggle('open')">
+        <span></span><span></span><span></span>
+      </button>
+      <nav aria-label="Menú principal">
+        <a href="index.html" class="nav-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Inicio</a>
+        <a href="directorio.html" class="nav-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Directorio</a>
+        <a href="normatividad.html" class="nav-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Normatividad</a>
+        <a href="documentos.html" class="nav-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M2 15h10"/><path d="m9 18 3-3-3-3"/></svg>Documentos de consulta</a>
+        <a href="herramientas.html" class="nav-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Caja de Herramientas</a>
+        <a href="noticias.html" class="nav-link active" aria-current="page"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 0-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>Noticias</a>
+      </nav>
+    </div>
+  </header>
+  <div class="flag-divider"><div class="seg-yellow"></div><div class="seg-blue"></div><div class="seg-red"></div></div>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <div class="container page-hero-inner">
+      <div>
+        <nav class="breadcrumb">
+          <a href="index.html">Inicio</a>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          <span>Noticias</span>
+        </nav>
+        <div class="page-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 0-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/></svg>
+          Publicaciones y noticias
+        </div>
+        <h1 class="page-title">Noticias de Toxicología</h1>
+        <p class="page-desc">Alertas toxicológicas, boletines epidemiológicos, eventos de capacitación, publicaciones del INS y novedades del campo de la toxicología en salud pública.</p>
+      </div>
+    </div>
+  </div>
+  <div class="flag-divider"><div class="seg-yellow"></div><div class="seg-blue"></div><div class="seg-red"></div></div>
+
+  <main>
+    <div class="main-content">
+      <div class="container">
+
+        <div class="articles-grid" id="articles-grid"></div>
+
+        <div class="empty-state" id="empty-state">
+          <div class="empty-icon">📰</div>
+          <div class="empty-title">Sin resultados</div>
+          <p class="empty-desc">No se encontraron publicaciones.</p>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <div class="flag-divider"><div class="seg-yellow"></div><div class="seg-blue"></div><div class="seg-red"></div></div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="https://www.ins.gov.co/Portalweb2025/general-assets/ins-logo.png" alt="INS" onerror="this.style.display='none'" />
+          <p>Instituto Nacional de Salud — entidad pública adscrita al Ministerio de Salud y Protección Social de Colombia.</p>
+        </div>
+        <div><div class="footer-col-title">Micrositio</div><div class="footer-links">
+          <a href="index.html" class="footer-link">Inicio</a>
+          <a href="directorio.html" class="footer-link">Directorio</a>
+          <a href="normatividad.html" class="footer-link">Normatividad</a>
+          <a href="documentos.html" class="footer-link">Documentos de consulta</a>
+          <a href="herramientas.html" class="footer-link">Caja de Herramientas</a>
+          <a href="noticias.html" class="footer-link">Noticias</a>
+        </div></div>
+        <div><div class="footer-col-title">INS</div><div class="footer-links">
+          <a href="#" class="footer-link">Portal INS</a>
+          <a href="#" class="footer-link">SIVIGILA</a>
+          <a href="#" class="footer-link">Publicaciones</a>
+          <a href="#" class="footer-link">Contacto</a>
+        </div></div>
+        <div><div class="footer-col-title">Recursos</div><div class="footer-links">
+          <a href="#" class="footer-link">OPS / OMS</a>
+          <a href="#" class="footer-link">IPCS INCHEM</a>
+          <a href="#" class="footer-link">MSPS</a>
+          <a href="#" class="footer-link">INVIMA</a>
+        </div></div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2025 Instituto Nacional de Salud — Micrositio de Toxicología.</p>
+        <div class="footer-legal"><a href="#">Política de privacidad</a><a href="#">Términos de uso</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  /* ── Data ───────────────────────────────────────────────────── */
+  const NEWS = [
+    // 2025
+    { id:1,  cat:"Alerta",       date:"2025-04-18", day:"18", mon:"Abr", year:"2025", title:"Alerta nacional: incremento de intoxicaciones por raticidas anticoagulantes en zonas urbanas", excerpt:"El INS reporta un aumento significativo en los casos de intoxicación por brodifacuoma y warfarina en las ciudades de Bogotá, Medellín y Cali. Se activan medidas de alerta temprana y se llama a los servicios de urgencias a fortalecer la vigilancia.", emoji:"⚠️", bg:"hsl(0 84% 60% / 0.08)", tags:["raticidas","sivigila"], author:"Grupo de Toxicología — INS", readMin:4 },
+    { id:2,  cat:"Boletín",      date:"2025-04-10", day:"10", mon:"Abr", year:"2025", title:"Boletín toxicológico No. 12 — Intoxicaciones primer trimestre 2025", excerpt:"Publicación trimestral con el análisis epidemiológico de los eventos de intoxicación notificados al SIVIGILA. Se destaca el aumento en intoxicaciones por plaguicidas en regiones cafeteras y el control de brotes por alcohol adulterado en el Pacífico.", emoji:"📊", bg:"hsl(217 93% 45% / 0.08)", tags:["plaguicidas","sivigila"], author:"Dirección de Vigilancia — INS", readMin:8 },
+    { id:3,  cat:"Capacitación", date:"2025-04-02", day:"02", mon:"Abr", year:"2025", title:"Programa de formación en toxicovigilancia para equipos departamentales de salud pública — Cohorte 2025", excerpt:"El INS abre inscripciones para el programa virtual de 80 horas dirigido a profesionales de salud pública de las 32 secretarías departamentales. Módulos: identificación, notificación, manejo y análisis de eventos toxicológicos.", emoji:"🎓", bg:"hsl(38 92% 50% / 0.08)", tags:["sivigila"], author:"Subdirección de Capacitación — INS", readMin:3 },
+    { id:4,  cat:"Publicación",  date:"2025-03-28", day:"28", mon:"Mar", year:"2025", title:"Nueva guía técnica para la vigilancia de intoxicaciones por sustancias químicas — Versión 4.0", excerpt:"El INS publica la versión actualizada de la guía técnica que establece las definiciones de caso, criterios de notificación obligatoria, flujos de información y responsabilidades en el marco del SIVIGILA.", emoji:"📋", bg:"hsl(142 71% 45% / 0.08)", tags:["sivigila","plaguicidas"], author:"Grupo de Toxicología — INS", readMin:6 },
+    { id:5,  cat:"Alerta",       date:"2025-03-15", day:"15", mon:"Mar", year:"2025", title:"Alerta toxicológica: contaminación por mercurio en fuentes hídricas del Chocó biogeográfico", excerpt:"La ANLA y el INS emiten alerta conjunta ante la detección de niveles de mercurio superiores al límite permisible en cuatro ríos del departamento del Chocó, asociada a la actividad minera artesanal.", emoji:"🌊", bg:"hsl(0 84% 60% / 0.08)", tags:["metales","ambiental"], author:"INS / ANLA", readMin:5 },
+    { id:6,  cat:"Evento",       date:"2025-03-08", day:"08", mon:"Mar", year:"2025", title:"Congreso Nacional de Toxicología — Bogotá, mayo 2025", excerpt:"La Asociación Colombiana de Toxicología, con el aval del INS, realizará su congreso anual los días 21 al 23 de mayo en Bogotá. Temáticas: toxicología forense, clínica, ambiental y emergencias químicas.", emoji:"🏛️", bg:"hsl(270 60% 50% / 0.08)", tags:["industria"], author:"ACTOX / INS", readMin:2 },
+    { id:7,  cat:"Boletín",      date:"2025-02-20", day:"20", mon:"Feb", year:"2025", title:"Boletín de farmacovigilancia No. 49 — Reacciones adversas a plaguicidas de uso doméstico", excerpt:"El INVIMA presenta el análisis del primer semestre de 2025 sobre reacciones adversas notificadas a productos fitosanitarios de uso doméstico, con énfasis en exposición en menores de 5 años.", emoji:"💊", bg:"hsl(217 93% 45% / 0.08)", tags:["farmacos","plaguicidas"], author:"INVIMA — Farmacovigilancia", readMin:7 },
+    { id:8,  cat:"Investigación", date:"2025-02-10", day:"10", mon:"Feb", year:"2025", title:"Resultados del estudio de exposición crónica a organofosforados en agricultores del Huila", excerpt:"Investigadores del INS y la Universidad Surcolombiana presentan los hallazgos del estudio EXPOCROP-HLA que midió biomarcadores de exposición en 480 trabajadores agrícolas durante 18 meses.", emoji:"🔬", bg:"hsl(195 80% 45% / 0.08)", tags:["plaguicidas"], author:"INS / Unisurcolombiana", readMin:9 },
+    { id:9,  cat:"Publicación",  date:"2025-01-30", day:"30", mon:"Ene", year:"2025", title:"Informe anual de intoxicaciones en Colombia 2024 — Principales hallazgos", excerpt:"El informe anual consolidado revela que las intoxicaciones por plaguicidas siguen siendo la primera causa de intoxicación reportada al SIVIGILA, seguidas de medicamentos y sustancias psicoactivas.", emoji:"📑", bg:"hsl(142 71% 45% / 0.08)", tags:["plaguicidas","sivigila"], author:"Grupo de Toxicología — INS", readMin:10 },
+    { id:10, cat:"Alerta",       date:"2025-01-22", day:"22", mon:"Ene", year:"2025", title:"Alerta por brote de intoxicación por metanol en licor adulterado — Departamento de Córdoba", excerpt:"El INS confirma 8 casos de intoxicación grave y 2 muertes por metanol en el municipio de Montería asociados al consumo de aguardiente adulterado. Se activan protocolos de respuesta y se refuerza la inspección.", emoji:"🚨", bg:"hsl(0 84% 60% / 0.08)", tags:["metanol"], author:"Grupo de Emergencias — INS", readMin:5 },
+    { id:11, cat:"Capacitación", date:"2025-01-15", day:"15", mon:"Ene", year:"2025", title:"Taller virtual de actualización en manejo clínico de intoxicaciones por mordedura de serpiente", excerpt:"El INS en convenio con la OPS oferta el taller de 16 horas dirigido a médicos y enfermeros de zonas rurales y hospitales de primer nivel. Disponible en modalidad virtual asincrónica.", emoji:"🐍", bg:"hsl(38 92% 50% / 0.08)", tags:["serpientes"], author:"INS / OPS", readMin:3 },
+    { id:12, cat:"Boletín",      date:"2025-01-08", day:"08", mon:"Ene", year:"2025", title:"Panorama toxicológico de fin de año — Diciembre 2024", excerpt:"Análisis especial de las intoxicaciones reportadas durante temporada decembrina: intoxicaciones por bebidas alcohólicas, pólvora y medicamentos, con comparativo frente a 2023.", emoji:"📈", bg:"hsl(217 93% 45% / 0.08)", tags:["metanol","sivigila"], author:"Dirección de Vigilancia — INS", readMin:6 },
+
+    // 2024
+    { id:13, cat:"Publicación",  date:"2024-12-12", day:"12", mon:"Dic", year:"2024", title:"Manual de toxicología clínica para servicios de urgencias — 3.ª edición", excerpt:"El MSPS y el INS publican la tercera edición del manual de referencia para médicos en urgencias, con nuevos capítulos sobre intoxicaciones emergentes y actualización de antídotos disponibles en Colombia.", emoji:"📚", bg:"hsl(142 71% 45% / 0.08)", tags:["farmacos"], author:"MSPS / INS", readMin:4 },
+    { id:14, cat:"Alerta",       date:"2024-11-20", day:"20", mon:"Nov", year:"2024", title:"Alerta por exposición a gases tóxicos en trabajadores de empresa de plásticos — Barranquilla", excerpt:"El INS y la ARL coordinan la respuesta ante la exposición accidental a vapores de cloruro de vinilo de 23 trabajadores de una empresa de Barranquilla. Se emiten medidas correctivas urgentes.", emoji:"🏭", bg:"hsl(0 84% 60% / 0.08)", tags:["industria","ambiental"], author:"INS / MINTRABAJO", readMin:4 },
+    { id:15, cat:"Evento",       date:"2024-11-05", day:"05", mon:"Nov", year:"2024", title:"Simposio internacional de toxicovigilancia en Latinoamérica — Medellín 2024", excerpt:"Colombia fue sede del simposio convocado por la OPS con participación de 18 países. Los ejes temáticos fueron la armonización de sistemas de vigilancia y el manejo de emergencias químicas.", emoji:"🌎", bg:"hsl(270 60% 50% / 0.08)", tags:["sivigila"], author:"OPS / INS / Gobernación de Antioquia", readMin:3 },
+    { id:16, cat:"Boletín",      date:"2024-10-15", day:"15", mon:"Oct", year:"2024", title:"Boletín toxicológico No. 11 — Tercer trimestre 2024", excerpt:"El tercer trimestre de 2024 registró un incremento del 18% en intoxicaciones por plaguicidas con respecto al mismo período de 2023, concentrado en los departamentos de Nariño y Cauca.", emoji:"📊", bg:"hsl(217 93% 45% / 0.08)", tags:["plaguicidas","sivigila"], author:"Dirección de Vigilancia — INS", readMin:8 },
+    { id:17, cat:"Investigación", date:"2024-09-30", day:"30", mon:"Sep", year:"2024", title:"Publicación en revista indexada: exposición a metales pesados en mineros artesanales del Pacífico colombiano", excerpt:"El estudio liderado por investigadores del INS y la Universidad del Valle fue publicado en Environmental Toxicology, evidenciando niveles de mercurio y plomo por encima de los valores de referencia biológica.", emoji:"🧪", bg:"hsl(195 80% 45% / 0.08)", tags:["metales","ambiental"], author:"INS / Universidad del Valle", readMin:7 },
+    { id:18, cat:"Capacitación", date:"2024-09-10", day:"10", mon:"Sep", year:"2024", title:"Diplomado en toxicología para profesionales de salud pública — segunda cohorte 2024", excerpt:"El INS abre la segunda cohorte del diplomado virtual de 120 horas acreditado por la Universidad Nacional de Colombia. Inscripciones abiertas hasta el 30 de septiembre.", emoji:"🎓", bg:"hsl(38 92% 50% / 0.08)", tags:["sivigila"], author:"INS / UNAL", readMin:3 },
+    { id:19, cat:"Publicación",  date:"2024-08-20", day:"20", mon:"Ago", year:"2024", title:"Resolución 1117 de 2024 — Nuevos lineamientos para la notificación de eventos toxicológicos", excerpt:"El INS publica la nota técnica explicativa de la nueva resolución que actualiza las definiciones de caso, clasificación de sustancias y responsabilidades de notificación para todos los actores del SGSSS.", emoji:"📄", bg:"hsl(142 71% 45% / 0.08)", tags:["sivigila"], author:"Grupo Normativo — INS", readMin:5 },
+    { id:20, cat:"Alerta",       date:"2024-07-18", day:"18", mon:"Jul", year:"2024", title:"Alerta por plaguicidas no autorizados detectados en productos agrícolas del Meta", excerpt:"El INVIMA y el ICA emiten alerta conjunta ante la detección de residuos de clorpirifos por encima del límite máximo residual en muestras de frutas del departamento del Meta.", emoji:"🌿", bg:"hsl(0 84% 60% / 0.08)", tags:["plaguicidas","ambiental"], author:"INVIMA / ICA", readMin:4 },
+    { id:21, cat:"Boletín",      date:"2024-06-28", day:"28", mon:"Jun", year:"2024", title:"Boletín especial: intoxicaciones por picadura de araña en Colombia 2019–2024", excerpt:"Análisis epidemiológico de los casos de loxoscelismo y latrodectismo reportados en el país durante los últimos 5 años, con mapas de distribución y recomendaciones clínicas.", emoji:"🕷️", bg:"hsl(217 93% 45% / 0.08)", tags:["serpientes"], author:"Grupo de Toxicología — INS", readMin:9 },
+    { id:22, cat:"Investigación", date:"2024-05-14", day:"14", mon:"May", year:"2024", title:"Validación de biomarcadores urinarios para la detección temprana de intoxicación por organofosforados", excerpt:"Estudio metodológico del INS que establece puntos de corte para colinesterasa eritrocitaria y plasmática en población colombiana, mejorando la sensibilidad diagnóstica del protocolo actual.", emoji:"🔬", bg:"hsl(195 80% 45% / 0.08)", tags:["plaguicidas"], author:"Laboratorio Nacional — INS", readMin:8 },
+    { id:23, cat:"Evento",       date:"2024-04-22", day:"22", mon:"Abr", year:"2024", title:"Día mundial de la Tierra: foro INS sobre toxicología ambiental y cambio climático", excerpt:"El INS realizó el foro virtual con la participación de 800 profesionales, abordando los efectos del cambio climático sobre la distribución de sustancias tóxicas y la salud de ecosistemas colombianos.", emoji:"🌍", bg:"hsl(270 60% 50% / 0.08)", tags:["ambiental"], author:"INS / ANLA", readMin:3 },
+    { id:24, cat:"Boletín",      date:"2024-03-10", day:"10", mon:"Mar", year:"2024", title:"Boletín toxicológico No. 10 — Cuarto trimestre 2023", excerpt:"Cierre del año 2023 con el análisis consolidado de los 32 departamentos. Antioquia, Cundinamarca y Nariño concentran el 48% de los casos de intoxicación reportados al SIVIGILA.", emoji:"📊", bg:"hsl(217 93% 45% / 0.08)", tags:["sivigila","plaguicidas"], author:"Dirección de Vigilancia — INS", readMin:7 },
+
+    // 2023
+    { id:25, cat:"Alerta",       date:"2023-12-05", day:"05", mon:"Dic", year:"2023", title:"Alerta decembrina: riesgo de intoxicaciones por pólvora y fuegos artificiales", excerpt:"Cada año Colombia registra centenares de quemaduras e intoxicaciones por óxidos de nitrógeno y pólvora en temporada de fin de año. El INS emite las recomendaciones preventivas para la ciudadanía y los servicios de salud.", emoji:"🎆", bg:"hsl(0 84% 60% / 0.08)", tags:["industria"], author:"Grupo de Toxicología — INS", readMin:3 },
+    { id:26, cat:"Publicación",  date:"2023-10-18", day:"18", mon:"Oct", year:"2023", title:"Colombia presenta avances en toxicovigilancia en el Foro OPS Latinoamérica", excerpt:"El equipo de toxicología del INS presentó los resultados del modelo colombiano de vigilancia integrada ante representantes de 22 países, destacando el sistema de alertas tempranas y la integración SIVIGILA-RIPS.", emoji:"🌐", bg:"hsl(142 71% 45% / 0.08)", tags:["sivigila"], author:"INS / OPS", readMin:4 },
+    { id:27, cat:"Capacitación", date:"2023-08-22", day:"22", mon:"Ago", year:"2023", title:"Curso presencial de toxicología forense para peritos judiciales — INMLCF", excerpt:"El Instituto Nacional de Medicina Legal y el INS ofrecen el curso de actualización de 40 horas para peritos, con énfasis en interpretación de resultados toxicológicos en contexto judicial.", emoji:"⚖️", bg:"hsl(38 92% 50% / 0.08)", tags:["farmacos"], author:"INMLCF / INS", readMin:3 },
+    { id:28, cat:"Boletín",      date:"2023-06-14", day:"14", mon:"Jun", year:"2023", title:"Boletín especial: 10 años del Sistema Nacional de Toxicovigilancia en Colombia", excerpt:"El INS conmemora una década de vigilancia continua de eventos toxicológicos, con un análisis histórico de las tendencias, logros institucionales y retos futuros del sistema.", emoji:"🏆", bg:"hsl(217 93% 45% / 0.08)", tags:["sivigila"], author:"Grupo de Toxicología — INS", readMin:10 },
+  ];
+
+  const TAG_CLASS = {
+    "Alerta":       "tag-alerta",
+    "Boletín":      "tag-boletin",
+    "Evento":       "tag-evento",
+    "Publicación":  "tag-publicacion",
+    "Capacitación": "tag-capacitacion",
+    "Investigación":"tag-investigacion",
+  };
+
+  const PAGE_SIZE = 8;
+  let filtered = [];
+
+  /* ── Render card ──────────────────────────────────────────────── */
+  function cardHTML(a) {
+    return `
+      <article class="article-card">
+        <div class="card-img"><img src="test-noticia.jpg" alt="${a.title}" /></div>
+        <div class="card-body">
+          <span class="card-tag ${TAG_CLASS[a.cat] ?? ''}">${a.cat}</span>
+          <h3 class="card-title">${a.title}</h3>
+          <p class="card-excerpt">${a.excerpt}</p>
+          <div class="card-meta">
+            <span>${a.day} ${a.mon} ${a.year}</span>
+            <span class="meta-sep"></span>
+            <span>${a.readMin} min</span>
+          </div>
+          <div class="card-read-more">
+            Leer más
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </div>
+        </div>
+      </article>`;
+  }
+
+  /* ── Render grid ──────────────────────────────────────────────── */
+  function renderGrid(reset = true) {
+    const grid  = document.getElementById("articles-grid");
+    const empty = document.getElementById("empty-state");
+
+    if (reset) { grid.innerHTML = ""; }
+
+    if (filtered.length === 0) {
+      empty.classList.add("visible");
+    } else {
+      empty.classList.remove("visible");
+      filtered.forEach(a => { grid.innerHTML += cardHTML(a); });
+    }
+  }
+
+  /* ── Apply filters ────────────────────────────────────────────── */
+  function applyFilters() {
+    filtered = [...NEWS];
+    renderGrid(true);
+  }
+
+  /* ── Load more ────────────────────────────────────────────────── */
+  /* ── Init ─────────────────────────────────────────────────────── */
+  applyFilters();
+  </script>
+</body>
+</html>
